@@ -64,12 +64,12 @@ FINAL_DARK = with_overrides(
     lo_pct=2,
     hi_pct=99.5,
     gamma=0.95,
-    shadow_detail=0.1,  # a little strand texture in the hair
+    shadow_detail=0.0,
     smooth=0.6,
     edge_weight=0.15,
     local_contrast=1.5,
     local_radius=0.025,
-    floor=0.28,  # dark hair still drawn (brighter than before) so it reads clearly
+    floor=0.17,  # dark hair still drawn, faintly, so the silhouette survives
 )
 
 VARIANTS: dict[str, dict] = {
