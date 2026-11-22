@@ -11,10 +11,8 @@
   <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-dark-compact.svg">
   <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light-compact.svg">
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-dark.svg">
-  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light.svg" width="100%" alt="Krishiv Vaid, drawn in monospaced characters from a photograph, beside a terminal-style summary: University of Waterloo, studying math, computer science and statistics; uptime counted from June 22, 2008; focus on ML, AI4Science and mathematics; Software Engineer at USAMO Guide and Waterloo Rocketry, Machine Learning Engineer at Orangutany; research in AI for science and mathematics at MIT CSAIL and harmonic analysis at the University of Toronto; Python, C++, Java; krishvaid.me; kvaid@uwaterloo.ca.">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light.svg" width="100%" alt="Krishiv Vaid, drawn in monospaced characters from a photograph, beside a terminal-style summary: University of Waterloo, studying math, computer science and statistics; uptime counted from June 22, 2008; focus on ML, AI4Science and mathematics; Software Engineer at USAMO Guide and Waterloo Rocketry, Machine Learning Engineer at Orangutany; research in AI for science and mathematics at MIT CSAIL and harmonic analysis at the University of Toronto; Python, C++, TypeScript; krishvaid.me; kvaid@uwaterloo.ca.">
 </picture>
-
-<br><br>
 
 <picture>
   <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/01-about-dark-compact.svg">

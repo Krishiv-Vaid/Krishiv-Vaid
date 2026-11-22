@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from datetime import date
 
 from .ascii_art import AsciiGrid
-from .svg import FONT_STACK, document, font_face, mono_width, text_run
+from .svg import FONT_STACK, document, font_face, text_run
 from .theme import FONT_BOLD, FONT_REGULAR, MONO_ADVANCE, Theme
 
 # --------------------------------------------------------------------------
@@ -33,8 +33,8 @@ SECTIONS: list[tuple[str | None, list[tuple[str, str]]]] = [
         ("uoft.math", "Harmonic Analysis"),
     ]),
     ("languages", [
-        ("primary", "Python, C++, Java"),
-        ("also", "TypeScript, JavaScript, SQL, LaTeX"),
+        ("primary", "Python, C++, TypeScript"),
+        ("also", "Java, JavaScript, SQL, LaTeX"),
     ]),
     ("contact", [
         ("portfolio", "krishvaid.me"),
@@ -147,21 +147,9 @@ def _portrait_rows(grid: AsciiGrid, x0: float, y0: float, ps: float,
     return out
 
 
-def _panel(lines, x0: float, y0: float, size: float, lh: float, theme: Theme,
-           palette_strip: bool) -> list[str]:
-    out = []
-    for i, spans in enumerate(lines):
-        if spans:
-            out.append(text_run(x0, y0 + i * lh + lh * 0.72, spans, size))
-    if palette_strip:
-        # fastfetch-style colour blocks, in the README's own palette.
-        sw = mono_width(3, size)
-        y = y0 + len(lines) * lh + lh * 0.6
-        tones = [theme.faint, theme.dim, theme.muted, theme.silver, theme.accent, theme.text]
-        for k, col in enumerate(tones):
-            out.append(f'<rect x="{x0 + 2 * size * MONO_ADVANCE + k * (sw + 4):.2f}" '
-                       f'y="{y:.2f}" width="{sw:.2f}" height="{lh * 0.55:.2f}" rx="1.5" fill="{col}"/>')
-    return out
+def _panel(lines, x0: float, y0: float, size: float, lh: float) -> list[str]:
+    return [text_run(x0, y0 + i * lh + lh * 0.72, spans, size)
+            for i, spans in enumerate(lines) if spans]
 
 
 def _card(width: float, height: float, theme: Theme) -> str:
@@ -173,7 +161,7 @@ TITLE = "Krishiv Vaid: character portrait and profile summary"
 
 
 def render_hero(grid: AsciiGrid, theme: Theme, layout: HeroLayout = HeroLayout(),
-                line_height: float = 2.0, palette_strip: bool = True, up: str | None = None) -> str:
+                line_height: float = 2.0, up: str | None = None) -> str:
     """Wide layout: portrait left, panel right."""
     L = layout
     ps = L.portrait_size
@@ -185,7 +173,7 @@ def render_hero(grid: AsciiGrid, theme: Theme, layout: HeroLayout = HeroLayout()
     cols = L.panel_cols or int(avail // (L.panel_size * MONO_ADVANCE))
     lines = _panel_lines(cols, up)
     lh = L.panel_size * L.panel_line
-    panel_h = len(lines) * lh + (lh * 1.6 if palette_strip else 0)
+    panel_h = len(lines) * lh
 
     inner_h = max(portrait_h, panel_h)
     height = inner_h + 2 * L.pad
@@ -195,7 +183,7 @@ def render_hero(grid: AsciiGrid, theme: Theme, layout: HeroLayout = HeroLayout()
     body = [_card(L.width, height, theme), f'<g font-size="{ps}">']
     body += _portrait_rows(grid, L.pad, py0, ps, line_height)
     body += ["</g>", f'<g font-size="{L.panel_size}">']
-    body += _panel(lines, panel_x, ty0, L.panel_size, lh, theme, palette_strip)
+    body += _panel(lines, panel_x, ty0, L.panel_size, lh)
     body.append("</g>")
     chars = "".join(grid.chars) + "".join(t for row in lines for t, _ in row)
     return document(L.width, height, "".join(body), _style(theme, chars), TITLE)
@@ -215,7 +203,7 @@ def render_hero_compact(grid: AsciiGrid, theme: Theme, width: float = 560,
     body = [_card(width, height, theme), f'<g font-size="{ps:.3f}">']
     body += _portrait_rows(grid, pad, pad, ps, line_height)
     body += ["</g>", f'<g font-size="{panel_size}">']
-    body += _panel(lines, pad, panel_y, panel_size, lh, theme, palette_strip=False)
+    body += _panel(lines, pad, panel_y, panel_size, lh)
     body.append("</g>")
     chars = "".join(grid.chars) + "".join(t for row in lines for t, _ in row)
     return document(width, round(height), "".join(body), _style(theme, chars), TITLE)
