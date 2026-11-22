@@ -1,0 +1,24 @@
+# Inputs for the generated, data-driven assets (coin + stats panel).
+# Static assets (portrait, project cards, toolkit) are configured in code.
+
+[github]
+login = "Krishiv-Vaid"
+# Rolling window for contribution metrics, in days (GitHub caps a single
+# contributionsCollection query at one year).
+window_days = 365
+# Repositories whose activity is excluded from coin/stats inputs. The profile
+# repository is excluded because its history is mostly asset regeneration.
+exclude_repos = ["Krishiv-Vaid/Krishiv-Vaid"]
+# Markup / notebook languages are excluded from "programming language" metrics.
+exclude_languages = ["HTML", "CSS", "SCSS", "Jupyter Notebook", "TeX", "Makefile", "Dockerfile"]
+# Languages below this share are folded into "other" on the coin.
+min_language_share = 0.03
+
+[coin]
+# Rendered size of the GIF in CSS pixels; frames are drawn at 2x for HiDPI.
+size = 300
+frames = 64
+frame_ms = 60
+# Peak yaw of the oscillating rotation, degrees.
+yaw = 34
+pitch = 9
