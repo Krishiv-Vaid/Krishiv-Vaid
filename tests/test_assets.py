@@ -51,9 +51,17 @@ def test_readme_local_images_and_links_exist():
 
 def test_readme_dynamic_assets_point_at_output_branch():
     readme = (ROOT / "README.md").read_text()
-    dyn = re.findall(r"https://raw\.githubusercontent\.com/[^\"]+", readme)
-    assert dyn and all("/Krishiv-Vaid/Krishiv-Vaid/output/" in u for u in dyn)
-    assert any(u.endswith("koi.webp") for u in dyn)
+    urls = re.findall(r"https://raw\.githubusercontent\.com/[^\"]+", readme)
+    out = "https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/"
+    main = "https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/"
+    dyn = [u for u in urls if u.startswith(out)]
+    assert dyn and any(u.endswith("koi.webp") for u in dyn)
+    assert all(u.startswith((out, main)) for u in urls)
+    # static images are linked directly (relative paths go through an uncached
+    # github.com redirect that can drop images); each must exist in the repo
+    static = [u.removeprefix(main) for u in urls if u.startswith(main)]
+    assert static and all((ROOT / p).is_file() for p in static)
+    assert not re.search(r'(src|srcset)="(?!https://)', readme)
 
 
 def test_readme_has_no_phone_number():

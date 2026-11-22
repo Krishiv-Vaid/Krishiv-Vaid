@@ -24,6 +24,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 RAW = "https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/"
+RAW_MAIN = "https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/"
 CSS = "https://cdn.jsdelivr.net/npm/github-markdown-css@5.8.1/github-markdown-{}.css"
 CHROME = [
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
@@ -44,6 +45,7 @@ def main() -> int:
          "-F", f"text=@{ROOT / 'README.md'}"],
         check=True, capture_output=True, text=True).stdout
     html = html.replace(RAW, (ROOT / "out").as_uri() + "/")
+    html = html.replace(RAW_MAIN, ROOT.as_uri() + "/")
     html = re.sub(r'(src|srcset|href)="(?!https?:|mailto:|#|file:)([^"]+)"',
                   lambda m: f'{m.group(1)}="{(ROOT / m.group(2)).as_uri()}"', html)
     html = html.replace("<details>", "<details open>")

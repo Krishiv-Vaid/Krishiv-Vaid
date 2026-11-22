@@ -17,10 +17,10 @@
 <br><br>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/01-about-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/sections/01-about-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/sections/01-about-dark.svg">
-  <img src="assets/sections/01-about-light.svg" width="100%" alt="01 about">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/01-about-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/01-about-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/01-about-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/01-about-light.svg" width="100%" alt="01 about">
 </picture>
 
 I study computer science and statistics at the **University of Waterloo**.
@@ -34,10 +34,10 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
 <br>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/02-experience-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/sections/02-experience-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/sections/02-experience-dark.svg">
-  <img src="assets/sections/02-experience-light.svg" width="100%" alt="02 experience">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/02-experience-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/02-experience-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/02-experience-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/02-experience-light.svg" width="100%" alt="02 experience">
 </picture>
 
 - **[USAMO Guide](https://usamoguide.com)** · Software Engineer · infrastructure for an olympiad math platform used by 130,000+ students
@@ -55,25 +55,25 @@ Full details at [krishvaid.me](https://krishvaid.me).
 <br>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/03-projects-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/sections/03-projects-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/sections/03-projects-dark.svg">
-  <img src="assets/sections/03-projects-light.svg" width="100%" alt="03 projects">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/03-projects-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/03-projects-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/03-projects-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/03-projects-light.svg" width="100%" alt="03 projects">
 </picture>
 
 <a href="https://github.com/Krishiv-Vaid/tinytorch">
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/projects/tinytorch-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/projects/tinytorch-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/projects/tinytorch-dark.svg">
-  <img src="assets/projects/tinytorch-light.svg" width="100%" alt="TinyTorch, in progress. A deep learning framework from scratch in C++20: strided tensors with broadcasting and zero-copy views, reverse-mode autodiff, NN layers and SGD/Adam, with gradients checked against finite differences. Next: an arena allocator and a cache-blocked AVX2/FMA matmul kernel benchmarked against OpenBLAS. C++20, Python, AVX2, CMake.">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/tinytorch-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/tinytorch-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/tinytorch-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/tinytorch-light.svg" width="100%" alt="TinyTorch, in progress. A deep learning framework from scratch in C++20: strided tensors with broadcasting and zero-copy views, reverse-mode autodiff, NN layers and SGD/Adam, with gradients checked against finite differences. Next: an arena allocator and a cache-blocked AVX2/FMA matmul kernel benchmarked against OpenBLAS. C++20, Python, AVX2, CMake.">
 </picture>
 </a>
 
 <p>
-  <a href="https://github.com/Krishiv-Vaid/tinytorch"><img src="assets/badges/tt-lang.svg" alt="c++20"></a>
-  <a href="https://github.com/Krishiv-Vaid/tinytorch"><img src="assets/badges/tt-status.svg" alt="status: in progress"></a>
-  <a href="https://github.com/Krishiv-Vaid/tinytorch/blob/main/LICENSE"><img src="assets/badges/tt-license.svg" alt="license: MIT"></a>
+  <a href="https://github.com/Krishiv-Vaid/tinytorch"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/tt-lang.svg" alt="c++20"></a>
+  <a href="https://github.com/Krishiv-Vaid/tinytorch"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/tt-status.svg" alt="status: in progress"></a>
+  <a href="https://github.com/Krishiv-Vaid/tinytorch/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/tt-license.svg" alt="license: MIT"></a>
   <br><sub>&nbsp;<a href="https://github.com/Krishiv-Vaid/tinytorch">repository</a> · in progress, so no benchmarks yet · diagram: a transpose is a zero-copy view</sub>
 </p>
 
@@ -81,19 +81,19 @@ Full details at [krishvaid.me](https://krishvaid.me).
 
 <a href="https://github.com/Krishiv-Vaid/double-pendulum">
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/projects/double-pendulum-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/projects/double-pendulum-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/projects/double-pendulum-dark.svg">
-  <img src="assets/projects/double-pendulum-light.svg" width="100%" alt="Double Pendulum Simulator. A chaos laboratory: Lagrangian equations of motion, RK4, RK45 and DOP853 integrators, Lyapunov exponents and Poincaré sections, and a Python dashboard running in the browser via Pyodide. 7.8 million pendulum-steps per second on a 1000-pendulum ensemble, 640k steps per second on a single trajectory, 3.6x multiprocess speedup, 150 tests in CI.">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/double-pendulum-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/double-pendulum-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/double-pendulum-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/double-pendulum-light.svg" width="100%" alt="Double Pendulum Simulator. A chaos laboratory: Lagrangian equations of motion, RK4, RK45 and DOP853 integrators, Lyapunov exponents and Poincaré sections, and a Python dashboard running in the browser via Pyodide. 7.8 million pendulum-steps per second on a 1000-pendulum ensemble, 640k steps per second on a single trajectory, 3.6x multiprocess speedup, 150 tests in CI.">
 </picture>
 </a>
 
 <p>
-  <a href="https://github.com/Krishiv-Vaid/double-pendulum/blob/main/pyproject.toml"><img src="assets/badges/dp-python.svg" alt="python >=3.10"></a>
-  <a href="https://github.com/Krishiv-Vaid/double-pendulum/tree/main/tests"><img src="assets/badges/dp-tests.svg" alt="tests: 150 pytest"></a>
-  <a href="https://github.com/Krishiv-Vaid/double-pendulum#physics"><img src="assets/badges/dp-integrators.svg" alt="integrators: RK4, RK45, DOP853"></a>
-  <a href="https://krishiv-vaid.github.io/double-pendulum/"><img src="assets/badges/dp-demo.svg" alt="demo: live, Pyodide"></a>
-  <a href="https://github.com/Krishiv-Vaid/double-pendulum/blob/main/LICENSE"><img src="assets/badges/dp-license.svg" alt="license: MIT"></a>
+  <a href="https://github.com/Krishiv-Vaid/double-pendulum/blob/main/pyproject.toml"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/dp-python.svg" alt="python >=3.10"></a>
+  <a href="https://github.com/Krishiv-Vaid/double-pendulum/tree/main/tests"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/dp-tests.svg" alt="tests: 150 pytest"></a>
+  <a href="https://github.com/Krishiv-Vaid/double-pendulum#physics"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/dp-integrators.svg" alt="integrators: RK4, RK45, DOP853"></a>
+  <a href="https://krishiv-vaid.github.io/double-pendulum/"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/dp-demo.svg" alt="demo: live, Pyodide"></a>
+  <a href="https://github.com/Krishiv-Vaid/double-pendulum/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/dp-license.svg" alt="license: MIT"></a>
   <br><sub>&nbsp;<a href="https://github.com/Krishiv-Vaid/double-pendulum">repository</a> · <a href="https://krishiv-vaid.github.io/double-pendulum/">live demo</a> · benchmarks: Apple M4, Python 3.14 · card trace is a real RK4 run</sub>
 </p>
 
@@ -101,19 +101,19 @@ Full details at [krishvaid.me](https://krishvaid.me).
 
 <a href="https://github.com/Krishiv-Vaid/centsible">
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/projects/centsible-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/projects/centsible-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/projects/centsible-dark.svg">
-  <img src="assets/projects/centsible-light.svg" width="100%" alt="Centsible, hackathon winner. A savings planner for teens in Ontario: take-home pay with real EI, CPP and tax rules, a spending budget, and month-by-month goal projections up to 10 years. 183 occupations in 11 categories, PBKDF2-SHA256 with 120,000 iterations for local accounts, no server.">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/centsible-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/centsible-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/centsible-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/projects/centsible-light.svg" width="100%" alt="Centsible, hackathon winner. A savings planner for teens in Ontario: take-home pay with real EI, CPP and tax rules, a spending budget, and month-by-month goal projections up to 10 years. 183 occupations in 11 categories, PBKDF2-SHA256 with 120,000 iterations for local accounts, no server.">
 </picture>
 </a>
 
 <p>
-  <a href="https://github.com/Krishiv-Vaid/centsible/blob/main/package.json"><img src="assets/badges/ce-react.svg" alt="react 19"></a>
-  <a href="https://github.com/Krishiv-Vaid/centsible/tree/main/src/lib"><img src="assets/badges/ce-tests.svg" alt="tests: 26 vitest"></a>
-  <a href="https://github.com/Krishiv-Vaid/centsible"><img src="assets/badges/ce-award.svg" alt="award: BHSS hackathon winner"></a>
-  <a href="https://centsible-ca.netlify.app/"><img src="assets/badges/ce-app.svg" alt="app: live on Netlify"></a>
-  <a href="https://github.com/Krishiv-Vaid/centsible/blob/main/LICENSE"><img src="assets/badges/ce-license.svg" alt="license: MIT"></a>
+  <a href="https://github.com/Krishiv-Vaid/centsible/blob/main/package.json"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/ce-react.svg" alt="react 19"></a>
+  <a href="https://github.com/Krishiv-Vaid/centsible/tree/main/src/lib"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/ce-tests.svg" alt="tests: 26 vitest"></a>
+  <a href="https://github.com/Krishiv-Vaid/centsible"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/ce-award.svg" alt="award: BHSS hackathon winner"></a>
+  <a href="https://centsible-ca.netlify.app/"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/ce-app.svg" alt="app: live on Netlify"></a>
+  <a href="https://github.com/Krishiv-Vaid/centsible/blob/main/LICENSE"><img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/badges/ce-license.svg" alt="license: MIT"></a>
   <br><sub>&nbsp;<a href="https://github.com/Krishiv-Vaid/centsible">repository</a> · <a href="https://centsible-ca.netlify.app/">live app</a> · my first hackathon win</sub>
 </p>
 
@@ -135,17 +135,17 @@ Full details at [krishvaid.me](https://krishvaid.me).
 <br>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/04-toolkit-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/sections/04-toolkit-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/sections/04-toolkit-dark.svg">
-  <img src="assets/sections/04-toolkit-light.svg" width="100%" alt="04 toolkit">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/04-toolkit-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/04-toolkit-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/04-toolkit-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/04-toolkit-light.svg" width="100%" alt="04 toolkit">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/toolkit-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/toolkit-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/toolkit-dark.svg">
-  <img src="assets/toolkit-light.svg" width="100%" alt="Toolkit. Languages: Python, C++, TypeScript, JavaScript, Java, SQL, Ruby, LaTeX. ML and numerical: PyTorch, NumPy, SciPy, Matplotlib, Pillow, Pyodide. Systems and backend: C++20, CMake, Node.js, Supabase Edge Functions, Stripe, OAuth. Frontend: React, Next.js, Gatsby, Tailwind CSS, Capacitor, Storybook. Data: PostgreSQL, row-level security, SQLite/Turso, Supabase. Tooling and deploy: Git, GitHub Actions, pytest, Vitest, Playwright, ruff, ESLint, Lighthouse CI, Vercel, Netlify, Cloudflare Pages.">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/toolkit-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/toolkit-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/toolkit-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/toolkit-light.svg" width="100%" alt="Toolkit. Languages: Python, C++, TypeScript, JavaScript, Java, SQL, Ruby, LaTeX. ML and numerical: PyTorch, NumPy, SciPy, Matplotlib, Pillow, Pyodide. Systems and backend: C++20, CMake, Node.js, Supabase Edge Functions, Stripe, OAuth. Frontend: React, Next.js, Gatsby, Tailwind CSS, Capacitor, Storybook. Data: PostgreSQL, row-level security, SQLite/Turso, Supabase. Tooling and deploy: Git, GitHub Actions, pytest, Vitest, Playwright, ruff, ESLint, Lighthouse CI, Vercel, Netlify, Cloudflare Pages.">
 </picture>
 
 <br><br>
@@ -153,10 +153,10 @@ Full details at [krishvaid.me](https://krishvaid.me).
 <a name="koi-pond"></a>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/05-koi-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/sections/05-koi-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/sections/05-koi-dark.svg">
-  <img src="assets/sections/05-koi-light.svg" width="100%" alt="05 koi pond, fed by my commits, regenerated daily">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/05-koi-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/05-koi-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/05-koi-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/05-koi-light.svg" width="100%" alt="05 koi pond, fed by my commits, regenerated daily">
 </picture>
 
 <p align="center">
@@ -186,25 +186,25 @@ The pond is pixel art, drawn at 280 × 140 native pixels by [`generate_koi.py`](
 The idea of a creature that grows from your GitHub activity comes from [Git Tulkun](https://github.com/PramudithaN/git-tulkun) (MIT); see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md).
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="docs/img/koi-stages-dark.png">
-  <img src="docs/img/koi-stages-light.png" width="100%" alt="How the pond fills: a fry at 20 contributions, patches filling in at 60, the first adult and a new fry at 100, and growing schools at 250, 600 and 1,300 contributions.">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/docs/img/koi-stages-dark.png">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/docs/img/koi-stages-light.png" width="100%" alt="How the pond fills: a fry at 20 contributions, patches filling in at 60, the first adult and a new fry at 100, and growing schools at 250, 600 and 1,300 contributions.">
 </picture>
 </details>
 
 <br>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/06-beyond-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/sections/06-beyond-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/sections/06-beyond-dark.svg">
-  <img src="assets/sections/06-beyond-light.svg" width="100%" alt="06 beyond the terminal">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/06-beyond-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/06-beyond-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/06-beyond-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/06-beyond-light.svg" width="100%" alt="06 beyond the terminal">
 </picture>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/beyond-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/beyond-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/beyond-dark.svg">
-  <img src="assets/beyond-light.svg" width="100%" alt="2562 Chess.com peak, top 0.01%, playing since age 3; 14 years of swimming, 10 competitive, sprints; 5.70 second speedcubing personal best; first hackathon win with Centsible at BHSS.">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/beyond-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/beyond-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/beyond-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/beyond-light.svg" width="100%" alt="2562 Chess.com peak, top 0.01%, playing since age 3; 14 years of swimming, 10 competitive, sprints; 5.70 second speedcubing personal best; first hackathon win with Centsible at BHSS.">
 </picture>
 
 <br>
@@ -213,10 +213,10 @@ The idea of a creature that grows from your GitHub activity comes from [Git Tulk
 <br>
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/07-contact-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/sections/07-contact-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/sections/07-contact-dark.svg">
-  <img src="assets/sections/07-contact-light.svg" width="100%" alt="07 contact">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/07-contact-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/07-contact-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/07-contact-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/main/assets/sections/07-contact-light.svg" width="100%" alt="07 contact">
 </picture>
 
 <p align="center">
