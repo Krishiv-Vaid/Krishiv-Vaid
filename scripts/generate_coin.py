@@ -14,6 +14,7 @@ metadata consumed by the stats panel).
 from __future__ import annotations
 
 import argparse
+import shutil
 import sys
 import time
 from pathlib import Path
@@ -26,37 +27,32 @@ from profilegen import config  # noqa: E402
 from profilegen.coin.animate import flatten, render_frames, save_gif, save_webp, still  # noqa: E402
 from profilegen.coin.evolution import STAGES  # noqa: E402
 from profilegen.github_data import Snapshot  # noqa: E402
-from profilegen.pipeline import coin_inputs, parse_languages, snapshot_languages, write  # noqa: E402
+from profilegen.pipeline import CoinMeta, coin_inputs, coin_inputs_hash, parse_languages, snapshot_languages, write  # noqa: E402
 from profilegen.theme import DARK, FONT_REGULAR, LIGHT  # noqa: E402
 
 DEMO_LANGS = "Python:#3572A5:0.56,JavaScript:#f1e05a:0.44"
 
 
 def stages_sheet(out: Path, languages, px: int = 300) -> None:
+    """One preview sheet per theme: <stem>-dark.png and <stem>-light.png."""
     font = ImageFont.truetype(str(FONT_REGULAR), 15)
-    rows = []
-    for theme in (DARK, LIGHT):
-        tiles = []
-        for s in STAGES:
-            count = max(s.threshold, 1) + (s.threshold // 4 if s.index < 5 else 600)
-            detail, alloy, meta = coin_inputs(count, languages)
-            im = flatten(still(detail, alloy, px, texture=1024), theme)
-            tile = Image.new("RGB", (px, px + 46), theme.page)
-            tile.paste(im, (0, 0))
-            d = ImageDraw.Draw(tile)
-            d.text((px / 2, px + 12), f"{s.index:02d}  {s.name}", fill=theme.text, font=font, anchor="mm")
-            d.text((px / 2, px + 32), f"{s.threshold}+ contributions", fill=theme.muted, font=font, anchor="mm")
-            tiles.append(tile)
-        row = Image.new("RGB", (px * len(tiles), tiles[0].height), theme.page)
-        for i, t in enumerate(tiles):
-            row.paste(t, (i * px, 0))
-        rows.append(row)
-    sheet = Image.new("RGB", (rows[0].width, sum(r.height for r in rows)))
-    for i, r in enumerate(rows):
-        sheet.paste(r, (0, i * r.height))
+    stills = []
+    for s in STAGES:
+        count = max(s.threshold, 1) + (s.threshold // 4 if s.index < 5 else 600)
+        detail, alloy, _ = coin_inputs(count, languages)
+        stills.append((s, still(detail, alloy, px, texture=1024)))
     out.parent.mkdir(parents=True, exist_ok=True)
-    sheet.save(out, optimize=True)
-    print(f"wrote {out}")
+    for theme in (DARK, LIGHT):
+        sheet = Image.new("RGB", (px * len(stills), px + 50), theme.page)
+        d = ImageDraw.Draw(sheet)
+        for i, (s, im) in enumerate(stills):
+            sheet.paste(flatten(im, theme), (i * px, 0))
+            cx = i * px + px / 2
+            d.text((cx, px + 12), f"{s.index:02d}  {s.name}", fill=theme.text, font=font, anchor="mm")
+            d.text((cx, px + 33), f"{s.threshold:,}+ contributions", fill=theme.muted, font=font, anchor="mm")
+        path = out.with_name(f"{out.stem}-{theme.name}{out.suffix}")
+        sheet.save(path, optimize=True)
+        print(f"wrote {path}")
 
 
 def main() -> int:
@@ -67,6 +63,7 @@ def main() -> int:
     ap.add_argument("--out", type=Path)
     ap.add_argument("--stages", type=Path, help="write a preview sheet of every stage")
     ap.add_argument("--frames", type=int)
+    ap.add_argument("--reuse", type=Path, help="directory of a previous run; copy its coin if inputs match")
     args = ap.parse_args()
     cfg = config.load()
 
@@ -91,6 +88,21 @@ def main() -> int:
     detail, alloy, meta = coin_inputs(contributions, languages, window,
                                       cfg.github.min_language_share, stale)
     c = cfg.coin
+    meta.inputs_hash = coin_inputs_hash(meta, c)
+    files = ["coin.webp", "coin-dark.gif", "coin-light.gif", "coin.png"]
+    if args.reuse and (args.reuse / "coin.json").exists():
+        try:
+            prev = CoinMeta.from_json((args.reuse / "coin.json").read_text())
+        except (ValueError, TypeError):
+            prev = None
+        if prev and prev.inputs_hash == meta.inputs_hash and all((args.reuse / f).exists() for f in files):
+            args.out.mkdir(parents=True, exist_ok=True)
+            for f in files:
+                if (args.reuse / f).resolve() != (args.out / f).resolve():
+                    shutil.copy2(args.reuse / f, args.out / f)
+            write(args.out / "coin.json", meta.to_json() + "\n")
+            print(f"{meta.stage}: inputs unchanged ({meta.inputs_hash}), reused previous render")
+            return 0
     frames = args.frames or c.frames
     t0 = time.time()
     hi = render_frames(detail, alloy, c.size * 2, frames, c.yaw, c.pitch)

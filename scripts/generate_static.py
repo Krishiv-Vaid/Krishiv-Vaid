@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -27,13 +28,17 @@ SECTIONS = [
 
 
 def main() -> int:
-    out = ROOT / "assets"
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--out", type=Path, default=ROOT / "assets")
+    out = ap.parse_args().out
     n = 0
     for theme in THEMES:
         for idx, title, note in SECTIONS:
             slug = title.split()[0]
             n += write(out / "sections" / f"{idx:02d}-{slug}-{theme.name}.svg",
                        section_rule(idx, title, theme, note=note))
+            n += write(out / "sections" / f"{idx:02d}-{slug}-{theme.name}-compact.svg",
+                       section_rule(idx, title, theme, width=380))
         for p in PROJECTS:
             n += write(out / "projects" / f"{p.slug}-{theme.name}.svg", project_card(p, theme))
             n += write(out / "projects" / f"{p.slug}-{theme.name}-compact.svg", project_card_compact(p, theme))

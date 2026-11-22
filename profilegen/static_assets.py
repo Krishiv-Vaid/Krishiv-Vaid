@@ -299,7 +299,7 @@ def _tag(c: Canvas, x_right: float, y: float, text: str, theme: Theme, size: flo
 
 
 def _project_text(c: Canvas, p: Project, x: float, y: float, w: float, theme: Theme,
-                  body: float, title: float) -> float:
+                  body: float, title: float, small: float = 10.8, metric_cols: int = 4) -> float:
     c.text(x, y, [(p.name, "b")], title)
     _tag(c, x + w, y - 3, p.tag, theme)
     y += title * 1.2 + 6
@@ -309,29 +309,37 @@ def _project_text(c: Canvas, p: Project, x: float, y: float, w: float, theme: Th
         y += body * 1.6
     y += 16
     if p.metrics:
-        n = len(p.metrics)
-        mw = w / n
+        mw = w / metric_cols
         big = title * 1.25
-        label_cols = max(8, int((mw - 10) // (10.5 * MONO_ADVANCE)))
-        max_lines = 1
-        for i, m in enumerate(p.metrics):
-            mx = x + i * mw
-            c.text(mx, y + big * 0.8, [(m.value, "b")], big)
-            parts = textwrap.wrap(m.label, label_cols)
-            max_lines = max(max_lines, len(parts))
-            for j, part in enumerate(parts):
-                c.text(mx, y + big * 0.8 + 18 + j * 14, [(part, "d")], 10.5)
-        y += big + 36 + 14 * max_lines
+        label_cols = max(8, int((mw - 10) // (small * MONO_ADVANCE)))
+        for r0 in range(0, len(p.metrics), metric_cols):
+            row = p.metrics[r0: r0 + metric_cols]
+            max_lines = 1
+            for i, m in enumerate(row):
+                mx = x + i * mw
+                c.text(mx, y + big * 0.8, [(m.value, "b")], big)
+                parts = textwrap.wrap(m.label, label_cols)
+                max_lines = max(max_lines, len(parts))
+                for j, part in enumerate(parts):
+                    c.text(mx, y + big * 0.8 + small * 1.7 + j * small * 1.35, [(part, "d")], small)
+            y += big + small * 1.7 + small * 1.35 * max_lines + 18
     if p.roadmap:
+        prefix = 2 + 11
+        width_cols = int(w // (body * MONO_ADVANCE))
         for status, item in p.roadmap:
-            c.text(x, y, [("◦ ", "d"), (f"{status:<11}", "a"), (item, "x")], body)
-            y += body * 1.75
+            lines = textwrap.wrap(item, max(12, width_cols - prefix))
+            for k, line in enumerate(lines):
+                head = [("◦ ", "d"), (f"{status:<11}", "a")] if k == 0 else [(" " * prefix, "")]
+                c.text(x, y, head + [(line, "x")], body)
+                y += body * 1.75
         y += 6
     if p.detail:
-        c.text(x, y, [(p.detail, "d")], 10.8)
-        y += 22
+        for line in textwrap.wrap(p.detail, int(w // (small * MONO_ADVANCE))):
+            c.text(x, y, [(line, "d")], small)
+            y += small * 1.6
+        y += 8
     c.raw(f'<line x1="{x:.1f}" y1="{y - 6:.1f}" x2="{x + w:.1f}" y2="{y - 6:.1f}" stroke="{theme.faint}"/>')
-    c.text(x, y + 12, [(p.tech, "sv")], 11)
+    c.text(x, y + 12, [(p.tech, "sv")], small + 0.2)
     return y + 12
 
 
@@ -357,7 +365,8 @@ def project_card_compact(p: Project, theme: Theme, width: float = 560) -> str:
     c.raw("")
     VISUALS[p.visual](c, (width - 380) / 2, 0, 380, vis_h, theme)
     c.raw(f'<line x1="1" y1="{vis_h}" x2="{width - 1}" y2="{vis_h}" stroke="{theme.edge}"/>')
-    end = _project_text(c, p, pad, vis_h + pad + 18, width - 2 * pad, theme, body=14.5, title=20)
+    end = _project_text(c, p, pad, vis_h + pad + 18, width - 2 * pad, theme, body=14.5, title=20,
+                        small=13.0, metric_cols=2)
     height = end + pad
     c.parts[0] = card_rect(width, height, theme)
     return c.svg(width, height, theme, f"{p.name}: {p.description}")

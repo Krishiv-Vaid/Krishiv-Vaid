@@ -28,7 +28,7 @@ def esc(text: str) -> str:
 
 @functools.lru_cache(maxsize=32)
 def _subset_woff2(font_path: str, chars: str) -> str:
-    font = TTFont(font_path)
+    font = TTFont(font_path, recalcTimestamp=False)
     opts = subset.Options()
     opts.flavor = "woff2"
     opts.layout_features = []  # no ligatures / contextual alternates

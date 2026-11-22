@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
@@ -23,13 +24,28 @@ class CoinMeta:
     growth: float
     alloy: list[dict]
     stale: bool = False
+    inputs_hash: str = ""
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), indent=2)
 
     @classmethod
     def from_json(cls, text: str) -> "CoinMeta":
-        return cls(**json.loads(text))
+        d = json.loads(text)
+        return cls(**{k: v for k, v in d.items() if k in cls.__dataclass_fields__})
+
+
+def coin_inputs_hash(meta: "CoinMeta", coin_cfg) -> str:
+    """Fingerprint of everything that affects the coin's pixels, including the
+    renderer's own source, so a code change always forces a re-render."""
+    h = hashlib.sha256()
+    h.update(json.dumps({"c": meta.contributions, "alloy": meta.alloy, "cfg": asdict(coin_cfg)},
+                        sort_keys=True).encode())
+    for src in sorted((Path(__file__).parent / "coin").glob("*.py")):
+        h.update(src.read_bytes())
+    for dep in ("theme.py", "ascii_art.py"):
+        h.update((Path(__file__).parent / dep).read_bytes())
+    return h.hexdigest()[:16]
 
 
 def coin_inputs(contributions: int, languages: list[tuple[str, str, float]],
