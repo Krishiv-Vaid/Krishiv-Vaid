@@ -33,35 +33,52 @@ from profilegen.theme import DARK, FONT_REGULAR, LIGHT, ROOT  # noqa: E402
 CUTOUT = ROOT / "source" / "portrait-cutout.png"
 
 # Selected after comparing the variants below (see docs/img/portrait-variants.png).
-# Same "ink = shadow" grid for both themes: hair and features carry identity,
-# exactly like a pencil drawing; on dark it reads as a phosphor drawing.
-FINAL = AsciiParams(
+# Both themes are *positive* images: light mode inks shadows (pencil on paper),
+# dark mode inks highlights (light on a screen). An earlier version reused the
+# light-mode grid on dark, which is a photographic negative and reads as a
+# skull; a positive mapping keeps the face human.
+FINAL = AsciiParams(  # light mode
     cols=96,
     tone_levels=6,
     rim_light=True,
     mode="shape",
     shape_weight=1.0,
     level_box=(0.30, 0.30, 0.72, 0.66),  # face: forehead -> chin, cheek to cheek
-    lo_pct=8,
-    hi_pct=92,
-    gamma=1.3,
-    shadow_detail=0.45,
-    edge_weight=0.3,
-    local_contrast=0.5,
+    lo_pct=3,
+    hi_pct=98.5,
+    gamma=1.5,
+    shadow_detail=0.3,
+    smooth=0.8,  # skin reads as shading, not speckle
+    edge_weight=0.2,
+    local_contrast=0.8,
     local_radius=0.03,
     fade_start=0.58,
     fade_end=0.90,
     fade_to=0.0,
 )
 
+FINAL_DARK = with_overrides(
+    FINAL,
+    ink_is_dark=False,  # bright glyphs = bright skin
+    level_box=None,
+    lo_pct=2,
+    hi_pct=99.5,
+    gamma=0.95,
+    shadow_detail=0.0,
+    smooth=0.6,
+    edge_weight=0.15,
+    local_contrast=1.5,
+    local_radius=0.025,
+    floor=0.17,  # dark hair still drawn, faintly, so the silhouette survives
+)
+
 VARIANTS: dict[str, dict] = {
     "A  luminance ramp": dict(mode="ramp", level_box=None, lo_pct=1.5, hi_pct=99,
-                              gamma=1.0, shadow_detail=0, edge_weight=0.0),
+                              gamma=1.0, shadow_detail=0, edge_weight=0.0, smooth=0),
     "B  ramp + Floyd-Steinberg": dict(mode="ramp", dither="fs", level_box=None, lo_pct=1.5,
-                                      hi_pct=99, gamma=1.0, shadow_detail=0, edge_weight=0.2),
-    "C  structure, subject levels": dict(level_box=None, lo_pct=1.5, hi_pct=99, gamma=0.7,
-                                         shadow_detail=0, local_contrast=1.2),
-    "D  structure + Sobel, face levels": dict(edge_weight=0.7, local_contrast=1.5, shadow_detail=0),
+                                      hi_pct=99, gamma=1.0, shadow_detail=0, edge_weight=0.2, smooth=0),
+    "C  hard face levels (v1)": dict(lo_pct=8, hi_pct=92, gamma=1.3, smooth=0, local_contrast=0.5),
+    "D  structure + Sobel": dict(edge_weight=0.7, local_contrast=1.5, shadow_detail=0, smooth=0),
     "E  selected": dict(),
 }
 
@@ -86,7 +103,12 @@ def variants_sheet(out: Path) -> None:
     for theme in (LIGHT, DARK):
         row = []
         for name, kw in VARIANTS.items():
-            g = convert(lum, alpha, with_overrides(FINAL, cols=64, **kw), atlas)
+            base = FINAL if theme is LIGHT or name.startswith("A") or name.startswith("B") else FINAL
+            if theme is DARK and name.startswith("E"):
+                base = FINAL_DARK
+            elif theme is DARK and name.startswith("C"):
+                base, kw = FINAL, dict(kw, ink_is_dark=True)  # the old negative, for reference
+            g = convert(lum, alpha, with_overrides(base, cols=64, **kw), atlas)
             im = render_grid_png(g, theme, font_size=8, pad=12)
             canvas = Image.new("RGB", (im.width, im.height + 26), theme.card)
             canvas.paste(im, (0, 26))
@@ -125,9 +147,12 @@ def main() -> None:
         make_cutout(args.from_photo, tuple(int(v) for v in args.crop.split(",")))
 
     lum, alpha = load_cutout(CUTOUT)
-    grid = convert(lum, alpha, FINAL).trimmed()
+    grids = {LIGHT.name: convert(lum, alpha, FINAL).trimmed(),
+             DARK.name: convert(lum, alpha, FINAL_DARK).trimmed()}
+    grid = grids[LIGHT.name]
     args.out.mkdir(parents=True, exist_ok=True)
     for theme in (DARK, LIGHT):
+        grid = grids[theme.name]
         path = args.out / f"portrait-{theme.name}.svg"
         path.write_text(render_hero(grid, theme, up=up), encoding="utf-8")
         print(f"wrote {path}  ({path.stat().st_size / 1024:.0f} KiB)")

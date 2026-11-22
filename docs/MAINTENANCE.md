@@ -85,6 +85,11 @@ The pipeline:
    strokes line up with the edge;
 6. quantises each cell into six ink tones per theme.
 
+Both themes are positive images. Light mode inks shadows (`FINAL`); dark mode
+inks highlights (`FINAL_DARK`), with a faint floor so dark hair keeps its
+silhouette. Reusing the light-mode grid on a dark background gives a
+photographic negative, which reads as a skull rather than a face.
+
 `docs/img/portrait-variants.png` compares the approaches that were tried. The
 chosen parameters are `FINAL` in `scripts/generate_portrait.py`.
 

@@ -53,3 +53,24 @@ def test_conversion_is_deterministic_and_trimmed():
     t = a.trimmed()
     assert t.chars[0].strip() and t.chars[-1].strip()
     assert t.tones.shape == (t.rows, t.cols)
+
+
+def test_dark_mode_inks_highlights_so_the_face_is_a_positive_image():
+    lum, alpha = disc()
+    p = AsciiParams(cols=40, ink_is_dark=False, edge_weight=0, fade_start=1.0, local_contrast=0)
+    ink = ink_map(lum, alpha, p)
+    h, w = ink.shape
+    left, right = ink[h // 3: 2 * h // 3, w // 4], ink[h // 3: 2 * h // 3, 3 * w // 4]
+    assert right.mean() > left.mean()  # brighter side gets more (bright) glyphs
+
+
+def test_published_portrait_settings_are_positive_in_both_themes():
+    import importlib.util
+    from pathlib import Path
+
+    path = Path(__file__).resolve().parent.parent / "scripts" / "generate_portrait.py"
+    spec = importlib.util.spec_from_file_location("gp", path)
+    gp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(gp)
+    assert gp.FINAL.ink_is_dark is True  # light theme: ink = shadow
+    assert gp.FINAL_DARK.ink_is_dark is False  # dark theme: ink = light

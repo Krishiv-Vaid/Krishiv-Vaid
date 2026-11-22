@@ -55,6 +55,7 @@ class AsciiParams:
     # from compressing skin tones, which is where eyes/brows/smile live.
     level_box: tuple[float, float, float, float] | None = None
     shadow_detail: float = 0.0  # 0..1 blend of whole-subject levels
+    smooth: float = 0.0  # pre-blur (analysis px): skin reads as shading, not speckle
     edge_weight: float = 0.35
     floor: float = 0.0  # minimum ink inside the subject (keeps silhouette)
     fade_start: float = 0.70  # fraction of height where the torso fades
@@ -166,6 +167,8 @@ def ink_map(lum: np.ndarray, alpha: np.ndarray, p: AsciiParams) -> np.ndarray:
     A = _resample(alpha, W, H)
     inside = A > 0.5
 
+    if p.smooth > 0:
+        L = blur(L, p.smooth)
     # Local contrast: lift mid-frequency detail (brows, eyelids, smile).
     base = blur(L, p.local_radius * W)
     L = L + p.local_contrast * (L - base)
