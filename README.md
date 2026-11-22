@@ -138,12 +138,9 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
 | [`centsible`](https://github.com/Krishiv-Vaid/centsible) | savings planner for teens in Ontario · BHSS hackathon winner | live · [app](https://centsible-ca.netlify.app/) |
 | [`tinytorch`](https://github.com/Krishiv-Vaid/tinytorch) | deep learning framework in C++20: strided tensors, reverse-mode autodiff, AVX2 kernels | in progress |
 | [`personal-website`](https://github.com/Krishiv-Vaid/personal-website) | portfolio at [krishvaid.me](https://krishvaid.me): static HTML/CSS/JS, light and dark themes | live |
-| [`endgame`](https://github.com/Krishiv-Vaid/endgame) | chess engine in C++20: bitboard move generation, alpha-beta search, NNUE evaluation | planned |
-| [`keyecho`](https://github.com/Krishiv-Vaid/keyecho) | research into keyboard acoustic side channels with DSP and deep learning | planned |
-| [`neuroscan`](https://github.com/Krishiv-Vaid/neuroscan) | intracranial hemorrhage detection from volumetric CT, with uncertainty quantification | planned |
 | [`Krishiv-Vaid`](https://github.com/Krishiv-Vaid/Krishiv-Vaid) | this profile: ASCII portrait pipeline, koi pond, live stats, all generated | daily |
 
-<sub>"in progress" and "planned" repositories don't contain code yet.</sub>
+<sub>"in progress" repositories don't contain code yet.</sub>
 </details>
 
 <br>
