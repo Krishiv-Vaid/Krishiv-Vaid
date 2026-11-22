@@ -6,7 +6,7 @@ values come straight from the snapshot written by github_data.collect.
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 from .github_data import Snapshot
 from .pipeline import KoiMeta
@@ -84,11 +84,6 @@ def _style(theme: Theme, chars: str) -> str:
     )
 
 
-def _weekly(daily: list[int]) -> list[int]:
-    # Calendar weeks run Sunday..Saturday; the first may be partial.
-    return [sum(daily[i: i + 7]) for i in range(0, len(daily), 7)]
-
-
 def render_stats(s: Snapshot, meta: KoiMeta, theme: Theme, width: float = 1000,
                  size: float = 12.6, compact: bool = False) -> str:
     pad = 30 if not compact else 26
@@ -153,42 +148,35 @@ def render_stats(s: Snapshot, meta: KoiMeta, theme: Theme, width: float = 1000,
              for lang in s.languages[:6]]
     y = _swatch_row(body, all_text, items, pad, y, size, lh, width - pad)
 
-    # Activity: the year by week, then the past seven days by day, flush right.
-    weeks = _weekly(s.daily)
-    if weeks:
+    # Activity: the past seven days, one bar per day across the full width.
+    days7 = s.daily[-7:]
+    if days7:
         y += lh * 0.4
-        y = put_rows([rule(f"activity · {s.window_from} → {s.window_to}", total_cols)], pad, y)
-        strip_h = 34
-        days7 = s.daily[-7:]
-        day_w = (bar_w * (0.30 if compact else 0.17))
-        gap = 18
-        year_w = bar_w - day_w - gap
-        n = len(weeks)
-        step = year_w / n
-        peak = max(weeks) or 1
-        for i, v in enumerate(weeks):
-            hgt = 1.5 if v == 0 else max(3.0, strip_h * (v / peak) ** 0.6)
-            col = theme.faint if v == 0 else theme.accent
-            op = "" if v == 0 else f' fill-opacity="{0.45 + 0.55 * (v / peak):.2f}"'
-            body.append(f'<rect x="{pad + i * step + 0.6:.2f}" y="{y + strip_h - hgt:.2f}" '
-                        f'width="{max(step - 1.6, 1):.2f}" height="{hgt:.2f}" rx="1" fill="{col}"{op}/>')
-        dx0 = pad + year_w + gap
-        body.append(f'<line x1="{dx0 - gap / 2:.1f}" y1="{y:.1f}" x2="{dx0 - gap / 2:.1f}" '
-                    f'y2="{y + strip_h:.1f}" stroke="{theme.rule}"/>')
-        dstep = day_w / 7
-        dpeak = max(max(days7), 1)
+        y = put_rows([rule("activity · past 7 days", total_cols)], pad, y)
+        last = date.fromisoformat(s.window_to)
+        labels = [(last - timedelta(days=len(days7) - 1 - i)).strftime("%a %d") for i in range(len(days7))]
+        strip_h = 46 if not compact else 60
+        step = bar_w / len(days7)
+        peak = max(max(days7), 1)
+        top = y + size * 1.3  # room for the count above the tallest bar
         for i, v in enumerate(days7):
-            hgt = 1.5 if v == 0 else max(3.0, strip_h * (v / dpeak) ** 0.6)
-            col = theme.faint if v == 0 else theme.text
-            body.append(f'<rect x="{dx0 + i * dstep + 1:.2f}" y="{y + strip_h - hgt:.2f}" '
-                        f'width="{max(dstep - 3, 1):.2f}" height="{hgt:.2f}" rx="1" fill="{col}"/>')
-        y += strip_h + 8
-        cap_l = f"weekly · peak {max(weeks)} · active weeks {sum(1 for v in weeks if v)}/{n}"
-        cap_r = f"past 7 days · {sum(days7)}"
-        body.append(text_run(pad, y + lh * 0.72, [(cap_l, "f")], size))
-        body.append(text_run(width - pad - mono_width(len(cap_r), size), y + lh * 0.72, [(cap_r, "f")], size))
-        all_text.extend([cap_l, cap_r])
-        y += lh
+            hgt = 2.0 if v == 0 else max(4.0, strip_h * (v / peak))
+            col = theme.faint if v == 0 else theme.accent
+            op = "" if v == 0 else f' fill-opacity="{0.55 + 0.45 * (v / peak):.2f}"'
+            bx = pad + i * step + step * 0.18
+            bw = step * 0.64
+            body.append(f'<rect x="{bx:.2f}" y="{top + strip_h - hgt:.2f}" width="{bw:.2f}" '
+                        f'height="{hgt:.2f}" rx="2" fill="{col}"{op}/>')
+            num = str(v)
+            body.append(text_run(bx + bw / 2 - mono_width(len(num), size) / 2,
+                                 top + strip_h - hgt - size * 0.45, [(num, "v" if v else "f")], size))
+            lab = labels[i]
+            body.append(text_run(bx + bw / 2 - mono_width(len(lab), size) / 2,
+                                 top + strip_h + size * 1.35, [(lab, "f")], size))
+            all_text.extend([num, lab])
+        y = top + strip_h + size * 1.35 + lh * 0.4
+        cap = f"{sum(days7)} contributions in the past 7 days · {sum(1 for v in days7 if v)}/7 active days"
+        y = put_rows([[(cap, "f")]], pad, y)
 
     height = y + pad - lh * 0.3
     card = (f'<rect x="0.5" y="0.5" width="{width - 1}" height="{height - 1:.1f}" rx="12" '

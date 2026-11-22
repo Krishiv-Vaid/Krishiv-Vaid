@@ -80,10 +80,11 @@ def test_stats_panel_labels_scope_and_values(theme, compact):
     svg = render_stats(snap, meta, theme, width=560 if compact else 1000, compact=compact)
     ET.fromstring(svg)
     for needle in ("812", "incl. 40 private", "365d", "all-time", "owned, non-fork",
-                   "3 koi", "50/100 fed", "C++", "2025-11-22", "past 7 days"):
+                   "3 koi", "50/100 fed", "C++", "past 7 days", "Sun 22"):
         assert needle in svg, needle
     # trimmed for job applications: no vanity counts
     assert "followers" not in svg and "stars" not in svg
+    assert "weekly" not in svg  # only the past seven days are charted
     assert "cached" not in svg
 
 

@@ -125,8 +125,8 @@ Full details at [krishvaid.me](https://krishvaid.me).
 |:--|:--|:--|
 | [`double-pendulum`](https://github.com/Krishiv-Vaid/double-pendulum) | chaos laboratory for the double pendulum; dashboard runs in the browser via Pyodide | active · [demo](https://krishiv-vaid.github.io/double-pendulum/) |
 | [`centsible`](https://github.com/Krishiv-Vaid/centsible) | savings planner for teens in Ontario · BHSS hackathon winner | live · [app](https://centsible-ca.netlify.app/) |
-| [`tinytorch`](https://github.com/Krishiv-Vaid/tinytorch) | deep learning framework in C++20: strided tensors, reverse-mode autodiff, AVX2 kernels | in progress |
-| [`personal-website`](https://github.com/Krishiv-Vaid/personal-website) | portfolio at [krishvaid.me](https://krishvaid.me): static HTML/CSS/JS, light and dark themes | live |
+| [`tinytorch`](https://github.com/Krishiv-Vaid/tinytorch) | deep learning framework from scratch in C++20: strided tensors with zero-copy views, reverse-mode autodiff, NN layers and SGD/Adam checked against finite differences, and an AVX2/FMA matmul benchmarked against OpenBLAS | in progress |
+| [`personal-website`](https://github.com/Krishiv-Vaid/personal-website) | source for [krishvaid.me](https://krishvaid.me): my work, research and projects in plain HTML, CSS and JavaScript (no framework, no build step), with light and dark themes and a visitor counter on a Cloudflare Worker | live |
 | [`Krishiv-Vaid`](https://github.com/Krishiv-Vaid/Krishiv-Vaid) | this profile: ASCII portrait pipeline, koi pond, live stats, all generated | daily |
 
 <sub>"in progress" repositories don't contain code yet.</sub>
@@ -167,7 +167,7 @@ Full details at [krishvaid.me](https://krishvaid.me).
   <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-dark-compact.svg">
   <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light-compact.svg">
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-dark.svg">
-  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light.svg" width="100%" alt="GitHub statistics, regenerated daily from the GitHub GraphQL API: how many koi are swimming and how far the current one has grown, contributions by language, contributions over a rolling 365-day window, commits, pull requests, public repositories, language distribution, weekly activity and the past seven days.">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light.svg" width="100%" alt="GitHub statistics, regenerated daily from the GitHub GraphQL API: how many koi are swimming and how far the current one has grown, contributions by language, contributions over a rolling 365-day window, commits, pull requests, public repositories, language distribution and contributions per day over the past seven days.">
 </picture>
 
 <details>
