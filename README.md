@@ -40,15 +40,15 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
   <img src="assets/sections/02-experience-light.svg" width="100%" alt="02 experience">
 </picture>
 
-- **[USAMO Guide](https://usamoguide.com)** · Software Engineer · Aug 2026–present · infrastructure for an olympiad math platform used by 130,000+ students
-- **[Waterloo Rocketry](https://www.waterloorocketry.com)** · Software Engineer · Sep 2026–present · ground-systems software and live telemetry dashboards for engine tests
-- **Orangutany** · Machine Learning Engineer · Apr–Aug 2026 · computer-vision species identification, from the Node.js API to an iOS app
+- **[USAMO Guide](https://usamoguide.com)** · Software Engineer · infrastructure for an olympiad math platform used by 130,000+ students
+- **[Waterloo Rocketry](https://www.waterloorocketry.com)** · Software Engineer · ground-systems software and live telemetry dashboards for engine tests
+- **Orangutany** · Machine Learning Engineer · computer-vision species identification, from the Node.js API to an iOS app
 
 <sub><b>research</b></sub>
 
-- **[MIT CSAIL](https://www.csail.mit.edu)** · Researcher, AI for Science & Mathematics · Nov 2026–present · formalising math so proofs written by models can be machine-checked
-- **[University of Toronto, Department of Mathematics](https://www.math.toronto.edu)** · Research Assistant, Harmonic Analysis · Jun–Sep 2026 · L<sup>p</sup> bounds for maximal averages
-- **STEMinate** · Research Intern, Brain–Computer Interfaces · Apr–Aug 2025 · sole author of *[Dream Engineering](https://doi.org/10.5281/zenodo.24373952)*
+- **[MIT CSAIL](https://www.csail.mit.edu)** · Researcher, AI for Science & Mathematics · formalising math so proofs written by models can be machine-checked
+- **[University of Toronto, Department of Mathematics](https://www.math.toronto.edu)** · Research Assistant, Harmonic Analysis · L<sup>p</sup> bounds for maximal averages
+- **STEMinate** · Research Intern, Brain–Computer Interfaces · sole author of *[Dream Engineering](https://doi.org/10.5281/zenodo.24373952)*
 
 Full details at [krishvaid.me](https://krishvaid.me).
 
