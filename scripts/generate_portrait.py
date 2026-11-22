@@ -4,7 +4,7 @@
     python scripts/generate_portrait.py                 # assets/portrait-{dark,light}.svg
     python scripts/generate_portrait.py --out out       # daily: refreshes the uptime line
     python scripts/generate_portrait.py --variants      # + docs/img/portrait-variants.png
-    python scripts/generate_portrait.py --from-photo me.jpg --crop 185,95,995,1065
+    python scripts/generate_portrait.py --from-photo me.jpg --crop 360,85,940,780
                                                         # rebuild source/portrait-cutout.png
 
 The committed cutout (source/portrait-cutout.png) is a greyscale + alpha crop,
@@ -43,7 +43,7 @@ FINAL = AsciiParams(  # light mode
     rim_light=True,
     mode="shape",
     shape_weight=1.0,
-    level_box=(0.30, 0.30, 0.72, 0.66),  # face: forehead -> chin, cheek to cheek
+    level_box=(0.31, 0.31, 0.74, 0.68),  # face: forehead -> chin, cheek to cheek
     lo_pct=3,
     hi_pct=98.5,
     gamma=1.5,
@@ -133,7 +133,7 @@ def variants_sheet(out: Path) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--from-photo", type=Path)
-    ap.add_argument("--crop", default="185,95,995,1065")
+    ap.add_argument("--crop", default="360,85,940,780")  # head and shoulders in the bird photo
     ap.add_argument("--variants", action="store_true")
     ap.add_argument("--out", type=Path, default=ROOT / "assets")
     ap.add_argument("--today", help="date for the uptime line (default: today in Toronto)")

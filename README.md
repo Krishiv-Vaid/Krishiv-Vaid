@@ -23,7 +23,7 @@
   <img src="assets/sections/01-about-light.svg" width="100%" alt="01 about">
 </picture>
 
-I study statistics and computer science at the **University of Waterloo**.
+I study computer science and statistics at the **University of Waterloo**.
 
 I like building things where code and math meet: physics simulations, machine learning tools, and the web apps around them. Right now that means USAMO Guide, ground software for Waterloo Rocketry, and research on AI for mathematics at MIT CSAIL.
 
@@ -66,8 +66,8 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
 **[MIT CSAIL](https://www.csail.mit.edu)** · Researcher, AI for Science & Mathematics<br>
 <sub>Nov 2026 – present · formal proof · machine learning</sub>
 
-- Getting machine learning models to write proofs that can actually be checked, starting with formalisation: restating a problem in a proof assistant so a computer verifies every step.
-- Studying how models search for proofs in that setting, where the answer is never fuzzy: the proof either checks or it doesn't.
+- Formalising math problems in a proof assistant so that proofs written by machine learning models can be checked by a computer.
+- Studying how language models search for proofs in formal systems.
 
 **[University of Toronto, Department of Mathematics](https://www.math.toronto.edu)** · Research Assistant, Harmonic Analysis<br>
 <sub>Jun – Sep 2026 · Toronto, ON · Fourier analysis · NumPy</sub>
