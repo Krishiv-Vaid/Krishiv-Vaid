@@ -81,7 +81,7 @@ def text_run(
     )
     length = mono_width(n, size)
     return (
-        f'<text x="{x:.2f}" y="{y:.2f}" textLength="{length:.2f}" '
+        f'<text x="{x:.2f}" y="{y:.2f}" font-size="{size:g}" textLength="{length:.2f}" '
         f'lengthAdjust="spacingAndGlyphs" xml:space="preserve"{extra}>{inner}</text>'
     )
 
