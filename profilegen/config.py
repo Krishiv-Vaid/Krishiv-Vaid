@@ -19,24 +19,23 @@ class GitHubConfig:
 
 
 @dataclass(frozen=True)
-class CoinConfig:
-    size: int = 300
-    frames: int = 72
-    frame_ms: int = 55
-    yaw: float = 34.0
-    pitch: float = 9.0
+class KoiConfig:
+    scale: int = 4
+    gif_scale: int = 3
+    frames: int = 300
+    frame_ms: int = 80
 
 
 @dataclass(frozen=True)
 class Config:
     github: GitHubConfig = field(default_factory=GitHubConfig)
-    coin: CoinConfig = field(default_factory=CoinConfig)
+    koi: KoiConfig = field(default_factory=KoiConfig)
 
 
 def load(path: Path = ROOT / "config.toml") -> Config:
     raw = tomllib.loads(path.read_text()) if path.exists() else {}
     gh = raw.get("github", {})
-    coin = raw.get("coin", {})
+    koi = raw.get("koi", {})
     return Config(
         github=GitHubConfig(
             login=gh.get("login", "Krishiv-Vaid"),
@@ -45,5 +44,5 @@ def load(path: Path = ROOT / "config.toml") -> Config:
             exclude_languages=tuple(gh.get("exclude_languages", ())),
             min_language_share=float(gh.get("min_language_share", 0.03)),
         ),
-        coin=CoinConfig(**{k: coin[k] for k in coin if k in CoinConfig.__dataclass_fields__}),
+        koi=KoiConfig(**{k: koi[k] for k in koi if k in KoiConfig.__dataclass_fields__}),
     )

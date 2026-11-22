@@ -1,7 +1,7 @@
 """Design tokens shared by every generated asset.
 
 One palette per GitHub colour scheme. All assets read from here so the hero,
-coin panel, stats panel and section rules stay visually identical.
+koi pond, stats panel and section rules stay visually identical.
 """
 
 from __future__ import annotations
@@ -33,8 +33,8 @@ class Theme:
     faint: str  # hairlines, inactive cells
     accent: str  # muted steel blue: keys
     silver: str  # metallic secondary
-    # Four ink tones for the portrait, faintest -> strongest.
-    ink: tuple[str, str, str, str] = field(default=("#000",) * 4)
+    # Six ink tones for the portrait, faintest -> strongest.
+    ink: tuple[str, ...] = field(default=("#000",) * 6)
 
     @property
     def dark(self) -> bool:
@@ -53,7 +53,7 @@ DARK = Theme(
     faint="#2f3640",
     accent="#9fb3c7",
     silver="#c3c8cd",
-    ink=("#454c56", "#737b86", "#aab1b9", "#ebe7de"),
+    ink=("#3d444d", "#59616b", "#7c848e", "#a3aab2", "#c9cdd1", "#f0ece3"),
 )
 
 LIGHT = Theme(
@@ -68,7 +68,7 @@ LIGHT = Theme(
     faint="#e6e4de",
     accent="#41607d",
     silver="#5b6269",
-    ink=("#bdbab2", "#8a8e95", "#4c525a", "#1c2026"),
+    ink=("#cdcac2", "#a9a8a2", "#85888d", "#5e636a", "#3a3f46", "#181c21"),
 )
 
 THEMES = (DARK, LIGHT)

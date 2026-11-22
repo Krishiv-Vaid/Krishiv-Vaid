@@ -49,18 +49,18 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PROFILE_TOKEN || secrets.GITHUB_TOKEN }}
         run: python scripts/collect_github.py --out out/snapshot.json --cache previous/snapshot.json
 
-      - name: Render coin (reused when inputs are unchanged)
-        run: python scripts/generate_coin.py --snapshot out/snapshot.json --out out --reuse previous
+      - name: Render koi pond (reused when inputs are unchanged)
+        run: python scripts/generate_koi.py --snapshot out/snapshot.json --out out --reuse previous
 
       - name: Render stats panel
-        run: python scripts/generate_stats.py --snapshot out/snapshot.json --coin out/coin.json --out out
+        run: python scripts/generate_stats.py --snapshot out/snapshot.json --koi out/koi.json --out out
 
       - name: Summary
         run: |
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
-          s = json.load(open("out/snapshot.json")); c = json.load(open("out/coin.json"))
-          print(f"**{c['stage']}** · {s['contributions']} contributions / {s['window_days']} d"
+          s = json.load(open("out/snapshot.json")); k = json.load(open("out/koi.json"))
+          print(f"**{k['stage']} koi**, {k['length_px']} px · {s['contributions']} contributions / {s['window_days']} d"
                 f" · stale={s['stale']}")
           print()
           print("| file | bytes |\n|--|--|")

@@ -23,6 +23,6 @@ def render_grid_png(grid: AsciiGrid, theme: Theme, font_size: int = 14,
         for c, glyph in enumerate(row):
             if glyph == " ":
                 continue
-            color = theme.ink[int(grid.tones[r, c])]
+            color = theme.accent if (grid.rim is not None and grid.rim[r, c]) else theme.ink[int(grid.tones[r, c])]
             d.text((pad + c * cw, base), glyph, fill=color, font=font, anchor="ls")
     return im

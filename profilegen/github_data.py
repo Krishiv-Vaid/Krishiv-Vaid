@@ -1,4 +1,4 @@
-"""Collect the GitHub metrics behind the coin and the stats panel.
+"""Collect the GitHub metrics behind the koi pond and the stats panel.
 
 Only the GraphQL API is used (one paginated repository query plus one
 contributions query), so a daily run costs a handful of points out of the
@@ -99,7 +99,7 @@ class Snapshot:
     window_to: str
     # Contribution calendar total for the window (what the profile graph shows).
     contributions_calendar: int
-    # Calendar total minus commits to excluded repositories (coin input).
+    # Calendar total minus commits to excluded repositories (koi input).
     contributions: int
     excluded_commits: int
     private_contributions: int  # restricted, count-only; included in calendar

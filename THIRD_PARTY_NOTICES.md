@@ -9,14 +9,17 @@ Licensed under the SIL Open Font License 1.1; see [`fonts/OFL.txt`](fonts/OFL.tx
 
 ## Git Tulkun
 
-The evolving coin is an original Python implementation, inspired by
+The koi pond is an original Python implementation, inspired by
 [Git Tulkun](https://github.com/PramudithaN/git-tulkun) by Pramuditha Nadun. No source
 code was copied. The following ideas were adapted from its design and documentation:
 
-- the concave growth curve `g = min(1, (contributions / 2800) ^ 0.45)`
-  ([`profilegen/coin/evolution.py`](profilegen/coin/evolution.py));
-- deriving a 4-step shade ramp from each GitHub language colour
-  ([`profilegen/coin/palette.py`](profilegen/coin/palette.py));
+- a pixel-art creature that grows with GitHub contributions, using the concave
+  growth curve `g = min(1, (contributions / 2800) ^ 0.45)`
+  ([`profilegen/koi/evolution.py`](profilegen/koi/evolution.py));
+- a swimming body driven by a spine with a travelling wave, and ordered (Bayer)
+  dithering ([`profilegen/koi/pond.py`](profilegen/koi/pond.py));
+- deriving a shade ramp from each GitHub language colour
+  ([`profilegen/palette.py`](profilegen/palette.py));
 - publishing generated assets to a separate `output` branch from a scheduled workflow.
 
 Git Tulkun is distributed under the following license:

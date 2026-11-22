@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from .github_data import Snapshot
-from .pipeline import CoinMeta
+from .pipeline import KoiMeta
 from .svg import FONT_STACK, document, font_face, mono_width, text_run
 from .theme import FONT_BOLD, FONT_REGULAR, MONO_ADVANCE, Theme
 
@@ -33,20 +33,20 @@ def _fmt(n: int) -> str:
     return f"{n:,}"
 
 
-def artifact_block(meta: CoinMeta, cols: int) -> list[Spans]:
-    rows = [rule("artifact", cols)]
-    rows.append(leader("stage", f"{meta.stage_index:02d} {meta.stage}", cols))
-    rows.append(leader("input", f"{_fmt(meta.contributions)} contributions", cols,
+def koi_block(meta: KoiMeta, cols: int) -> list[Spans]:
+    rows = [rule("koi", cols)]
+    rows.append(leader("age class", f"{meta.stage_index:02d} {meta.stage}", cols))
+    rows.append(leader("length", f"{meta.length_px:.0f} px", cols, f"g = {meta.growth:.3f}"))
+    rows.append(leader("fed by", f"{_fmt(meta.contributions)} contributions", cols,
                        f"/ {meta.window_days} d"))
     if meta.next_stage:
         remaining = meta.next_threshold - meta.contributions
         rows.append(leader("next", f"{meta.next_stage} @ {_fmt(meta.next_threshold)}", cols))
-        rows.append(leader("to go", f"{_fmt(remaining)}", cols, f"({meta.progress * 100:.0f}%)"))
+        rows.append(leader("to go", _fmt(remaining), cols, f"({meta.progress * 100:.0f}%)"))
     else:
-        rows.append(leader("next", "final stage", cols))
-    rows.append(leader("growth", f"g = {meta.growth:.3f}", cols, "(c/2800)^0.45"))
-    alloy = " · ".join(a["name"] for a in meta.alloy if a["name"] not in ("other", "unknown"))
-    rows.append(leader("alloy", alloy or "untinted", cols))
+        rows.append(leader("next", "fully grown", cols))
+    named = [lf["name"] for lf in meta.leaves if lf["name"] not in ("other", "unknown")]
+    rows.append(leader("patches", named[0] if named else "plain", cols))
     return rows
 
 
@@ -79,7 +79,7 @@ def _weekly(daily: list[int]) -> list[int]:
     return [sum(daily[i: i + 7]) for i in range(0, len(daily), 7)]
 
 
-def render_stats(s: Snapshot, meta: CoinMeta, theme: Theme, width: float = 1000,
+def render_stats(s: Snapshot, meta: KoiMeta, theme: Theme, width: float = 1000,
                  size: float = 12.6, compact: bool = False) -> str:
     pad = 30 if not compact else 26
     lh = size * 1.75
@@ -108,23 +108,23 @@ def render_stats(s: Snapshot, meta: CoinMeta, theme: Theme, width: float = 1000,
 
     if compact:
         cols = total_cols
-        y = put_rows(artifact_block(meta, cols), pad, y) + lh * 0.5
+        y = put_rows(koi_block(meta, cols), pad, y) + lh * 0.5
         y = put_rows(github_block(s, cols), pad, y) + lh * 0.5
     else:
         gap = 3
         cols = (total_cols - gap) // 2
-        left = artifact_block(meta, cols)
+        left = koi_block(meta, cols)
         right = github_block(s, cols)
         yl = put_rows(left, pad, y)
         yr = put_rows(right, pad + (cols + gap) * cw, y)
         y = max(yl, yr) + lh * 0.5
 
-    # Alloy + language distribution (one bar: these are the coin's colours).
-    y = put_rows([rule("languages · coin alloy", total_cols)], pad, y)
+    # Language distribution: the same colours tint the lily pads.
+    y = put_rows([rule("languages · lily pads", total_cols)], pad, y)
     bar_w = width - 2 * pad
     bar_h = 7
     x = pad
-    alloy = {a["name"]: a["hex"] for a in meta.alloy}
+    alloy = {lf["name"]: lf["hex"] for lf in meta.leaves}
     for lang in s.languages:
         w = bar_w * lang.share
         if w < 0.5:
@@ -148,7 +148,7 @@ def render_stats(s: Snapshot, meta: CoinMeta, theme: Theme, width: float = 1000,
         all_text.extend(t for t, _ in seg)
         lx += cw * (1.6 + len(lang.name) + len(f" {lang.share * 100:.1f}%") + 3)
     y += lh
-    scope = "bytes in owned public non-fork repos, markup excluded · colours tint the coin's enamel band"
+    scope = "bytes in owned public non-fork repos, markup excluded · each pad is a share of code"
     y = put_rows([[(scope, "f")]], pad, y)
 
     # Weekly activity strip over the window.
@@ -176,5 +176,5 @@ def render_stats(s: Snapshot, meta: CoinMeta, theme: Theme, width: float = 1000,
     all_text.extend(t for t, _ in head)
     all_text.append("■→·")
     title = (f"GitHub stats for {s.login}: {s.contributions_calendar} contributions in the last "
-             f"{s.window_days} days; coin stage {meta.stage}")
+             f"{s.window_days} days; koi age class {meta.stage}")
     return document(width, round(height), card + "".join(body), _style(theme, "".join(all_text)), title)

@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from profilegen.github_data import Language, Snapshot
-from profilegen.pipeline import coin_inputs
+from profilegen.pipeline import koi_inputs
 from profilegen.stats import render_stats
 from profilegen.theme import DARK, LIGHT
 
@@ -53,7 +53,7 @@ def test_readme_dynamic_assets_point_at_output_branch():
     readme = (ROOT / "README.md").read_text()
     dyn = re.findall(r"https://raw\.githubusercontent\.com/[^\"]+", readme)
     assert dyn and all("/Krishiv-Vaid/Krishiv-Vaid/output/" in u for u in dyn)
-    assert any(u.endswith("coin.webp") for u in dyn)
+    assert any(u.endswith("koi.webp") for u in dyn)
 
 
 def test_readme_has_no_phone_number():
@@ -75,16 +75,16 @@ def _snapshot(stale=False):
 @pytest.mark.parametrize("compact", [False, True])
 def test_stats_panel_labels_scope_and_values(theme, compact):
     snap = _snapshot()
-    _, _, meta = coin_inputs(snap.contributions, [(l.name, l.color, l.share) for l in snap.languages])
+    _, _, meta = koi_inputs(snap.contributions, [(l.name, l.color, l.share) for l in snap.languages])
     svg = render_stats(snap, meta, theme, width=560 if compact else 1000, compact=compact)
     ET.fromstring(svg)
     for needle in ("812", "incl. 40 private", "365d", "all-time", "owned, non-fork", "57",
-                   "Silver Relic", "C++", "2025-11-22"):
+                   "Nisai", "C++", "2025-11-22"):
         assert needle in svg, needle
     assert "cached" not in svg
 
 
 def test_stats_panel_flags_stale_data():
     snap = _snapshot(stale=True)
-    _, _, meta = coin_inputs(snap.contributions, [])
+    _, _, meta = koi_inputs(snap.contributions, [])
     assert "cached 2026-11-22" in render_stats(snap, meta, DARK)

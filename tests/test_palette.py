@@ -2,7 +2,8 @@ import colorsys
 
 import pytest
 
-from profilegen.coin.palette import METALS, alloy_from_languages, hex_to_rgb, mute, rgb_to_hex, shade_ramp
+from profilegen.koi.pond import koi_colors, leaves_for
+from profilegen.palette import hex_to_rgb, mute, rgb_to_hex, shade_ramp, swatches
 
 LINGUIST = {"Python": "#3572A5", "JavaScript": "#f1e05a", "C++": "#f34b7d", "Rust": "#dea584",
             "TypeScript": "#3178c6", "Go": "#00ADD8", "Java": "#b07219"}
@@ -15,35 +16,33 @@ def test_hex_roundtrip():
 
 
 @pytest.mark.parametrize("name,color", sorted(LINGUIST.items()))
-def test_muted_colours_stay_in_the_restrained_band(name, color):
-    for metal in METALS.values():
-        r, g, b = mute(color, metal)
-        h, l, s = colorsys.rgb_to_hls(r, g, b)
-        assert s <= 0.42, f"{name} too saturated: {s:.2f}"
-        assert 0.38 <= l <= 0.66, f"{name} lightness out of band: {l:.2f}"
+def test_muted_colours_stay_in_band(name, color):
+    r, g, b = mute(color)
+    h, l, s = colorsys.rgb_to_hls(r, g, b)
+    assert s <= 0.42 and 0.40 <= l <= 0.62
 
 
 def test_shade_ramp_is_ordered():
-    ramp = shade_ramp((0.5, 0.4, 0.3))
-    lum = [sum(c) for c in ramp]
+    lum = [sum(c) for c in shade_ramp((0.5, 0.4, 0.3))]
     assert lum == sorted(lum)
 
 
-def test_alloy_shares_normalise_and_fold_small_languages():
-    langs = [("Python", LINGUIST["Python"], 0.70), ("C++", LINGUIST["C++"], 0.28),
-             ("Go", LINGUIST["Go"], 0.02)]
-    alloy = alloy_from_languages(langs, METALS["gold"], min_share=0.03)
-    assert [a.name for a in alloy] == ["Python", "C++", "other"]
-    assert abs(sum(a.share for a in alloy) - 1.0) < 1e-9
+def test_swatches_normalise_and_fold_small_languages():
+    langs = [("Python", LINGUIST["Python"], 0.70), ("C++", LINGUIST["C++"], 0.28), ("Go", LINGUIST["Go"], 0.02)]
+    sw = swatches(langs, min_share=0.03)
+    assert [s.name for s in sw] == ["Python", "C++", "other"]
+    assert abs(sum(s.share for s in sw) - 1.0) < 1e-9
+    assert sw[0].source == LINGUIST["Python"]
 
 
-def test_alloy_caps_at_four_named_languages():
-    langs = [(n, c, 1.0 / len(LINGUIST)) for n, c in LINGUIST.items()]
-    alloy = alloy_from_languages(langs, METALS["silver"])
-    assert len([a for a in alloy if a.name != "other"]) == 4
-    assert alloy[-1].name == "other"
+def test_swatches_cap_and_empty():
+    sw = swatches([(n, c, 1 / 7) for n, c in LINGUIST.items()])
+    assert len([s for s in sw if s.name != "other"]) == 4
+    assert swatches([])[0].name == "unknown"
 
 
-def test_alloy_without_language_data_is_plain():
-    alloy = alloy_from_languages([], METALS["copper"])
-    assert len(alloy) == 1 and alloy[0].share == 1.0
+def test_language_changes_leaf_and_koi_colours():
+    py = leaves_for([("Python", LINGUIST["Python"], 1.0)])
+    js = leaves_for([("JavaScript", LINGUIST["JavaScript"], 1.0)])
+    assert py[0].hex != js[0].hex
+    assert (koi_colors(py).hi[2] != koi_colors(js).hi[2]).any()

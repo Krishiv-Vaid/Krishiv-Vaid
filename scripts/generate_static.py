@@ -13,7 +13,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from profilegen.pipeline import write  # noqa: E402
-from profilegen.static_assets import PROJECTS, project_card, project_card_compact, section_rule, toolkit  # noqa: E402
+from profilegen.static_assets import BADGES, PROJECTS, badge, beyond_tiles, project_card, project_card_compact, section_rule, toolkit  # noqa: E402
 from profilegen.theme import ROOT, THEMES  # noqa: E402
 
 SECTIONS = [
@@ -21,7 +21,7 @@ SECTIONS = [
     (2, "experience", ""),
     (3, "projects", ""),
     (4, "toolkit", ""),
-    (5, "telemetry", "regenerated daily"),
+    (5, "koi pond", "fed by my commits · regenerated daily"),
     (6, "beyond the terminal", ""),
     (7, "contact", ""),
 ]
@@ -42,8 +42,13 @@ def main() -> int:
         for p in PROJECTS:
             n += write(out / "projects" / f"{p.slug}-{theme.name}.svg", project_card(p, theme))
             n += write(out / "projects" / f"{p.slug}-{theme.name}-compact.svg", project_card_compact(p, theme))
+        n += write(out / f"beyond-{theme.name}.svg", beyond_tiles(theme))
+        n += write(out / f"beyond-{theme.name}-compact.svg", beyond_tiles(theme, width=560, compact=True))
         n += write(out / f"toolkit-{theme.name}.svg", toolkit(theme))
         n += write(out / f"toolkit-{theme.name}-compact.svg", toolkit(theme, width=560, compact=True))
+    for items in BADGES.values():
+        for slug, label, value, _ in items:
+            n += write(out / "badges" / f"{slug}.svg", badge(label, value))
     print(f"static assets: {n} file(s) changed")
     return 0
 

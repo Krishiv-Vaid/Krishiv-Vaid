@@ -1,11 +1,11 @@
-"""Static SVGs: section rules, project cards and the toolkit grid.
+"""Static SVGs: section rules, project cards, badges, the toolkit grid and
+"beyond the terminal" tiles.
 
 Each asset has a wide (desktop) and a compact (phone) layout; the README picks
 one with <picture> media queries. Visuals are generated from real data:
 
 * double pendulum: an actual RK4 integration (energy drift is measured and
   printed on the card);
-* TinyTorch: the strided-storage layout its tensors use (design, no numbers);
 * Centsible: the exact paycheque breakdown from the app's own screenshot.
 """
 
@@ -163,40 +163,6 @@ def visual_pendulum(c: Canvas, x: float, y: float, w: float, h: float, theme: Th
                                 (f"{drift:.1e}", "m")], 10.5)
 
 
-def visual_tensor(c: Canvas, x: float, y: float, w: float, h: float, theme: Theme) -> None:
-    hi = 6  # element highlighted across storage and both views
-    cell = 24
-    size = 10.5
-    sx = x + (w - 12 * cell) / 2
-    sy = y + 44
-    c.text(sx, sy - 12, [("storage", "m"), ("  float32[12], contiguous", "d")], size)
-
-    def box(bx, by, val, on):
-        stroke = theme.accent if on else theme.rule
-        fill = theme.accent if on else "none"
-        op = ' fill-opacity="0.16"' if on else ""
-        c.raw(f'<rect x="{bx:.1f}" y="{by:.1f}" width="{cell - 3}" height="{cell - 3}" rx="3" '
-              f'fill="{fill}"{op} stroke="{stroke}"/>')
-        c.text(bx + (cell - 3) / 2, by + cell / 2 + 2.5, [(str(val), "ab" if on else "x")], size, "middle")
-
-    for i in range(12):
-        box(sx + i * cell, sy, i, i == hi)
-    gy = sy + 76
-    ax = x + w * 0.10
-    c.text(ax, gy - 14, [("a", "b"), ("  (3,4) stride (4,1)", "d")], size)
-    for r in range(3):
-        for q in range(4):
-            v = r * 4 + q
-            box(ax + q * cell, gy + r * cell, v, v == hi)
-    bx = x + w * 0.58
-    c.text(bx, gy - 14, [("a.T", "b"), ("  (4,3) stride (1,4)", "d")], size)
-    for r in range(4):
-        for q in range(3):
-            v = q * 4 + r
-            box(bx + q * cell, gy + r * cell, v, v == hi)
-    c.text(x + 14, y + h - 14, [("transpose = new strides, same buffer: zero copies", "d")], size)
-
-
 def visual_receipt(c: Canvas, x: float, y: float, w: float, h: float, theme: Theme) -> None:
     size = 11.2
     lh = size * 1.85
@@ -261,19 +227,6 @@ PROJECTS = [
         visual="pendulum",
     ),
     Project(
-        slug="tinytorch",
-        name="TinyTorch",
-        tag="in progress",
-        description=("A deep learning framework written from scratch in C++20, built to understand "
-                     "the systems side of ML: memory layout, autodiff and numerical kernels."),
-        roadmap=[("building", "strided tensors, broadcasting, zero-copy views"),
-                 ("building", "reverse-mode autodiff"),
-                 ("developing", "NN layers, SGD/Adam, finite-difference grad checks"),
-                 ("designing", "arena allocator, AVX2/FMA blocked matmul vs OpenBLAS")],
-        tech="c++20 · python · avx2 · cmake",
-        visual="tensor",
-    ),
-    Project(
         slug="centsible",
         name="Centsible",
         tag="hackathon winner",
@@ -288,7 +241,7 @@ PROJECTS = [
     ),
 ]
 
-VISUALS = {"pendulum": visual_pendulum, "tensor": visual_tensor, "receipt": visual_receipt}
+VISUALS = {"pendulum": visual_pendulum, "receipt": visual_receipt}
 
 
 def _tag(c: Canvas, x_right: float, y: float, text: str, theme: Theme, size: float = 11) -> None:
@@ -422,4 +375,81 @@ def toolkit(theme: Theme, width: float = 1000, compact: bool = False) -> str:
     height = max(y_col) + pad - lh * 0.55
     c.parts[0] = card_rect(width, height, theme)
     title = "Toolkit: " + "; ".join(f"{label}: {', '.join(items)}" for label, items in TOOLKIT)
+    return c.svg(width, height, theme, title)
+
+
+# --------------------------------------------------------------------------
+# badges: one SVG each, neutral colours that read on both GitHub themes
+
+BADGE_LABEL = "#8b949e"
+BADGE_VALUE = "#6f8fae"
+BADGE_EDGE = "#8b949e"
+
+
+def badge(label: str, value: str, size: float = 11.0) -> str:
+    c = Canvas()
+    cw = size * MONO_ADVANCE
+    pad = 7
+    lw = len(label) * cw + 2 * pad
+    vw = len(value) * cw + 2 * pad
+    w, h = lw + vw, 20
+    c.raw(f'<rect x="0.5" y="0.5" width="{w - 1:.1f}" height="{h - 1}" rx="5" fill="none" '
+          f'stroke="{BADGE_EDGE}" stroke-opacity="0.55"/>')
+    c.raw(f'<line x1="{lw:.1f}" y1="1" x2="{lw:.1f}" y2="{h - 1}" stroke="{BADGE_EDGE}" stroke-opacity="0.35"/>')
+    c.text(pad, 14, [(label, "bl")], size)
+    c.text(lw + pad, 14, [(value, "bv")], size)
+    extra = f".bl{{fill:{BADGE_LABEL}}}.bv{{fill:{BADGE_VALUE};font-weight:600}}"
+    from .theme import DARK as _D
+    return c.svg(w, h, _D, f"{label}: {value}", extra)
+
+
+# (file slug, label, value, link)
+BADGES: dict[str, list[tuple[str, str, str, str]]] = {
+    "double-pendulum": [
+        ("dp-python", "python", ">=3.10", "https://github.com/Krishiv-Vaid/double-pendulum/blob/main/pyproject.toml"),
+        ("dp-tests", "tests", "150 pytest", "https://github.com/Krishiv-Vaid/double-pendulum/tree/main/tests"),
+        ("dp-integrators", "integrators", "RK4 · RK45 · DOP853", "https://github.com/Krishiv-Vaid/double-pendulum#physics"),
+        ("dp-demo", "demo", "pyodide · live", "https://krishiv-vaid.github.io/double-pendulum/"),
+        ("dp-license", "license", "MIT", "https://github.com/Krishiv-Vaid/double-pendulum/blob/main/LICENSE"),
+    ],
+    "centsible": [
+        ("ce-react", "react", "19", "https://github.com/Krishiv-Vaid/centsible/blob/main/package.json"),
+        ("ce-tests", "tests", "26 vitest", "https://github.com/Krishiv-Vaid/centsible/tree/main/src/lib"),
+        ("ce-award", "award", "BHSS hackathon winner", "https://github.com/Krishiv-Vaid/centsible"),
+        ("ce-app", "app", "netlify · live", "https://centsible-ca.netlify.app/"),
+        ("ce-license", "license", "MIT", "https://github.com/Krishiv-Vaid/centsible/blob/main/LICENSE"),
+    ],
+}
+
+
+# --------------------------------------------------------------------------
+# beyond the terminal: stat tiles
+
+TILES = [
+    ("2562", "chess.com peak", "top 0.01% · since age 3"),
+    ("14 yrs", "swimming", "10 competitive · sprints"),
+    ("5.70s", "speedcubing", "personal best solve"),
+    ("1st win", "hackathons", "Centsible · BHSS"),
+]
+
+
+def beyond_tiles(theme: Theme, width: float = 1000, compact: bool = False) -> str:
+    c = Canvas()
+    ncol = 2 if compact else 4
+    gap = 14
+    tw = (width - gap * (ncol - 1)) / ncol
+    th = 104 if not compact else 128
+    big = 26 if not compact else 32
+    small = 11.5 if not compact else 15
+    rows = (len(TILES) + ncol - 1) // ncol
+    for i, (value, label, note) in enumerate(TILES):
+        x = (i % ncol) * (tw + gap)
+        y = (i // ncol) * (th + gap)
+        c.raw(f'<rect x="{x + 0.5:.1f}" y="{y + 0.5:.1f}" width="{tw - 1:.1f}" height="{th - 1}" rx="10" '
+              f'fill="{theme.card}" stroke="{theme.edge}"/>')
+        c.text(x + 18, y + 22 + big * 0.8, [(value, "b")], big)
+        c.text(x + 18, y + 22 + big + small * 1.6, [(label, "a")], small)
+        c.text(x + 18, y + 22 + big + small * 3.1, [(note, "d")], small)
+    height = rows * th + (rows - 1) * gap
+    title = "Beyond the terminal: " + "; ".join(f"{v} {lbl} ({n})" for v, lbl, n in TILES)
     return c.svg(width, height, theme, title)

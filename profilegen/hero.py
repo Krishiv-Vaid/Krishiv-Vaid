@@ -18,14 +18,18 @@ SECTIONS: list[tuple[str | None, list[tuple[str, str]]]] = [
     (None, [
         ("user", "Krishiv Vaid"),
         ("institution", "University of Waterloo"),
-        ("program", "B.Math · CS & Statistics"),
+        ("program", "B.Math · Statistics & CS"),
         ("focus", "Systems · ML Infra · Mathematics"),
         ("interests", "Distributed Systems, SciComp, AI"),
     ]),
     ("experience", [
         ("usamo-guide", "Software Engineer"),
+        ("wat-rocketry", "Software Engineer"),
         ("orangutany", "Machine Learning Engineer"),
-        ("uoft.math", "Research Asst. · Harmonic Analysis"),
+    ]),
+    ("research", [
+        ("mit-csail", "AI for Science & Mathematics"),
+        ("uoft.math", "Harmonic Analysis"),
     ]),
     ("languages", [
         ("primary", "Python, C++, TypeScript"),
@@ -47,7 +51,7 @@ class HeroLayout:
     width: float = 1000
     pad: float = 30
     gap: float = 36
-    portrait_size: float = 9.6  # px per portrait glyph
+    portrait_size: float = 8.6  # px per portrait glyph
     panel_size: float = 12.4
     panel_line: float = 1.78  # line height in ems
     panel_cols: int = 0  # computed from available width when 0
@@ -80,7 +84,7 @@ def _panel_lines(cols: int) -> list[list[tuple[str, str]]]:
 
 def _style(theme: Theme, chars: str) -> str:
     t = theme
-    tone_css = "".join(f".t{i}{{fill:{c}}}" for i, c in enumerate(t.ink))
+    tone_css = "".join(f".t{i}{{fill:{c}}}" for i, c in enumerate(t.ink)) + f".rl{{fill:{t.accent}}}"
     return (
         font_face(FONT_REGULAR, chars, 400)
         + font_face(FONT_BOLD, chars, 600)
@@ -105,7 +109,12 @@ def _portrait_rows(grid: AsciiGrid, x0: float, y0: float, ps: float,
         body = row.strip(" ")
         spans: list[tuple[str, str]] = []
         for c, glyph in enumerate(body, start=lead):
-            cls = "" if glyph == " " else f"t{int(grid.tones[r, c])}"
+            if glyph == " ":
+                cls = ""
+            elif grid.rim is not None and grid.rim[r, c]:
+                cls = "rl"
+            else:
+                cls = f"t{int(grid.tones[r, c])}"
             if spans and spans[-1][1] == cls:
                 spans[-1] = (spans[-1][0] + glyph, cls)
             else:

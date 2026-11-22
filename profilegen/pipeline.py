@@ -1,4 +1,4 @@
-"""Glue between the snapshot, the coin and the stats panel."""
+"""Glue between the snapshot, the koi pond and the stats panel."""
 
 from __future__ import annotations
 
@@ -7,22 +7,25 @@ import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from .coin.evolution import Detail, detail_for, next_stage, stage_progress
-from .coin.palette import METALS, Alloy, alloy_from_languages
 from .github_data import Snapshot
+from .koi.evolution import Koi, koi_for, next_stage, stage_progress
+from .koi.pond import leaves_for
+from .palette import Swatch
 
 
 @dataclass
-class CoinMeta:
+class KoiMeta:
     stage: str
     stage_index: int
     contributions: int
     window_days: int
+    length_px: float
     next_stage: str | None
     next_threshold: int | None
     progress: float
     growth: float
-    alloy: list[dict]
+    leaves: list[dict]
+    day: str = ""
     stale: bool = False
     inputs_hash: str = ""
 
@@ -30,43 +33,45 @@ class CoinMeta:
         return json.dumps(asdict(self), indent=2)
 
     @classmethod
-    def from_json(cls, text: str) -> "CoinMeta":
+    def from_json(cls, text: str) -> "KoiMeta":
         d = json.loads(text)
         return cls(**{k: v for k, v in d.items() if k in cls.__dataclass_fields__})
 
 
-def coin_inputs_hash(meta: "CoinMeta", coin_cfg) -> str:
-    """Fingerprint of everything that affects the coin's pixels, including the
-    renderer's own source, so a code change always forces a re-render."""
-    h = hashlib.sha256()
-    h.update(json.dumps({"c": meta.contributions, "alloy": meta.alloy, "cfg": asdict(coin_cfg)},
-                        sort_keys=True).encode())
-    for src in sorted((Path(__file__).parent / "coin").glob("*.py")):
-        h.update(src.read_bytes())
-    for dep in ("theme.py", "ascii_art.py"):
-        h.update((Path(__file__).parent / dep).read_bytes())
-    return h.hexdigest()[:16]
-
-
-def coin_inputs(contributions: int, languages: list[tuple[str, str, float]],
-                window_days: int = 365, min_share: float = 0.03,
-                stale: bool = False) -> tuple[Detail, list[Alloy], CoinMeta]:
-    detail = detail_for(contributions)
-    alloy = alloy_from_languages(languages, METALS[detail.stage.metal], min_share=min_share)
-    nxt = next_stage(detail.stage)
-    meta = CoinMeta(
-        stage=detail.stage.name,
-        stage_index=detail.stage.index,
+def koi_inputs(contributions: int, languages: list[tuple[str, str, float]],
+               window_days: int = 365, min_share: float = 0.03, day: str = "",
+               stale: bool = False) -> tuple[Koi, list[Swatch], KoiMeta]:
+    koi = koi_for(contributions)
+    leaves = leaves_for(languages, min_share=min_share)
+    nxt = next_stage(koi.stage)
+    meta = KoiMeta(
+        stage=koi.stage.name,
+        stage_index=koi.stage.index,
         contributions=contributions,
         window_days=window_days,
+        length_px=round(koi.length, 1),
         next_stage=nxt.name if nxt else None,
         next_threshold=nxt.threshold if nxt else None,
         progress=round(stage_progress(contributions), 4),
-        growth=round(detail.g, 4),
-        alloy=[{"name": a.name, "share": round(a.share, 4), "hex": a.hex} for a in alloy],
+        growth=round(koi.g, 4),
+        leaves=[{"name": s.name, "share": round(s.share, 4), "hex": s.hex, "source": s.source}
+                for s in leaves],
+        day=day,
         stale=stale,
     )
-    return detail, alloy, meta
+    return koi, leaves, meta
+
+
+def koi_inputs_hash(meta: KoiMeta, koi_cfg) -> str:
+    """Fingerprint of everything that affects the pond's pixels, including the
+    renderer's own source, so a code change always forces a re-render."""
+    h = hashlib.sha256()
+    h.update(json.dumps({"c": meta.contributions, "leaves": meta.leaves, "day": meta.day,
+                         "cfg": asdict(koi_cfg)}, sort_keys=True).encode())
+    for src in sorted((Path(__file__).parent / "koi").glob("*.py")):
+        h.update(src.read_bytes())
+    h.update((Path(__file__).parent / "palette.py").read_bytes())
+    return h.hexdigest()[:16]
 
 
 def snapshot_languages(snap: Snapshot) -> list[tuple[str, str, float]]:

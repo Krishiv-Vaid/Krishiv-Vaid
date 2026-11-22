@@ -64,6 +64,7 @@ class AsciiParams:
     dither: str = "none"  # "none" | "fs" | "atkinson" (ramp mode)
     shape_weight: float = 0.6  # 0 = pure tone, 1 = pure structure
     tone_levels: int = 4
+    rim_light: bool = False  # mark silhouette cells facing the key light (top-left)
     charset: str = CHARSET
     sub: tuple[int, int] = (6, 12)  # analysis pixels per cell (w, h)
 
@@ -73,6 +74,7 @@ class AsciiGrid:
     chars: list[str]  # one string per row
     tones: np.ndarray  # (rows, cols) int in [0, tone_levels)
     ink: np.ndarray = field(repr=False)  # (rows, cols) mean ink per cell
+    rim: np.ndarray | None = field(default=None, repr=False)  # rim-lit cells
 
     def trimmed(self) -> "AsciiGrid":
         """Drop blank rows at the top and bottom."""
@@ -80,7 +82,8 @@ class AsciiGrid:
         if not keep:
             return self
         a, b = keep[0], keep[-1] + 1
-        return AsciiGrid(self.chars[a:b], self.tones[a:b], self.ink[a:b])
+        rim = self.rim[a:b] if self.rim is not None else None
+        return AsciiGrid(self.chars[a:b], self.tones[a:b], self.ink[a:b], rim)
 
     @property
     def rows(self) -> int:
@@ -326,7 +329,18 @@ def convert(lum: np.ndarray, alpha: np.ndarray, p: AsciiParams,
     q = np.clip(mean_ink / max(np.percentile(mean_ink[mean_ink > 0.02], 97)
                                if (mean_ink > 0.02).any() else 1.0, 1e-6), 0, 0.9999)
     tones = (q * p.tone_levels).astype(int)
-    return AsciiGrid(chars=chars, tones=tones, ink=mean_ink)
+    rim = None
+    if p.rim_light:
+        # Cell-level alpha; a subject cell whose left / upper-left / upper
+        # neighbour is background sits on the lit edge of the silhouette.
+        cols_, rows_ = grid_shape(lum.shape[1], lum.shape[0], p)
+        A = _resample(alpha, cols_ * p.sub[0], rows_ * p.sub[1])
+        ca = _cells(A, p.sub).mean(axis=(2, 3))
+        bg = np.pad(ca < 0.35, 1, constant_values=True)
+        lit = bg[1:-1, :-2] | bg[:-2, :-2] | bg[:-2, 1:-1]
+        nonblank = np.array([[ch != " " for ch in row] for row in chars])
+        rim = (ca > 0.5) & lit & nonblank
+    return AsciiGrid(chars=chars, tones=tones, ink=mean_ink, rim=rim)
 
 
 def with_overrides(p: AsciiParams, **kw) -> AsciiParams:
