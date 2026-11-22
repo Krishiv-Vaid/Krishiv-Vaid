@@ -78,6 +78,58 @@ query($login: String!, $from: DateTime!, $to: DateTime!) {
 """
 
 
+HISTORY_QUERY = """
+query($login: String!, $from: DateTime!, $to: DateTime!) {
+  user(login: $login) {
+    contributionsCollection(from: $from, to: $to) {
+      contributionCalendar { weeks { contributionDays { date contributionCount } } }
+      commitContributionsByRepository(maxRepositories: 100) {
+        repository { ...R } contributions(first: 100) { nodes { occurredAt commitCount } }
+      }
+      pullRequestContributionsByRepository(maxRepositories: 100) {
+        repository { ...R } contributions(first: 100) { nodes { occurredAt } }
+      }
+      issueContributionsByRepository(maxRepositories: 100) {
+        repository { ...R } contributions(first: 100) { nodes { occurredAt } }
+      }
+      pullRequestReviewContributionsByRepository(maxRepositories: 100) {
+        repository { ...R } contributions(first: 100) { nodes { occurredAt } }
+      }
+      repositoryContributions(first: 100) { nodes { occurredAt repository { ...R } } }
+    }
+  }
+}
+fragment R on Repository {
+  nameWithOwner
+  primaryLanguage { name color }
+  repositoryTopics(first: 20) { nodes { topic { name } } }
+}
+"""
+
+# Repos with no detected code yet fall back to a language implied by a topic.
+TOPIC_LANGUAGES = {
+    "cpp": ("C++", "#f34b7d"), "cpp17": ("C++", "#f34b7d"), "cpp20": ("C++", "#f34b7d"),
+    "cpp23": ("C++", "#f34b7d"), "cplusplus": ("C++", "#f34b7d"), "c": ("C", "#555555"),
+    "python": ("Python", "#3572A5"), "python3": ("Python", "#3572A5"),
+    "javascript": ("JavaScript", "#f1e05a"), "typescript": ("TypeScript", "#3178c6"),
+    "java": ("Java", "#b07219"), "rust": ("Rust", "#dea584"), "go": ("Go", "#00ADD8"),
+    "golang": ("Go", "#00ADD8"), "kotlin": ("Kotlin", "#A97BFF"), "swift": ("Swift", "#F05138"),
+    "ruby": ("Ruby", "#701516"), "haskell": ("Haskell", "#5e5086"), "julia": ("Julia", "#a270ba"),
+    "racket": ("Racket", "#3c5caa"), "ocaml": ("OCaml", "#ef7a08"), "csharp": ("C#", "#178600"),
+}
+
+
+def repo_language(repo: dict) -> tuple[str, str] | None:
+    lang = repo.get("primaryLanguage")
+    if lang and lang.get("name"):
+        return lang["name"], lang.get("color") or "#8b949e"
+    for node in (repo.get("repositoryTopics") or {}).get("nodes", []):
+        hit = TOPIC_LANGUAGES.get(node["topic"]["name"].lower())
+        if hit:
+            return hit
+    return None
+
+
 class GitHubError(RuntimeError):
     pass
 
@@ -115,7 +167,15 @@ class Snapshot:
     languages: list[Language] = field(default_factory=list)
     language_scope: str = ""
     daily: list[int] = field(default_factory=list)  # oldest -> newest
+    # All-time, chronological: one entry per contribution, an index into
+    # history_langs, or -1 for private / language-less work.
+    history_langs: list[list] = field(default_factory=list)  # [[name, color], ...]
+    history: list[int] = field(default_factory=list)
     stale: bool = False
+
+    @property
+    def contributions_all_time(self) -> int:
+        return len(self.history)
 
     def to_json(self) -> str:
         return json.dumps(asdict(self), indent=2)
@@ -257,6 +317,8 @@ def collect(cfg: GitHubConfig, transport: Transport,
         if item["repository"]["nameWithOwner"].lower() in excluded
     )
     daily = [d["contributionCount"] for w in cal["weeks"] for d in w["contributionDays"]]
+    since = datetime.fromisoformat(user["createdAt"].replace("Z", "+00:00"))
+    history_langs, history = collect_history(cfg.login, transport, since, now)
 
     return Snapshot(
         login=user["login"],
@@ -283,7 +345,77 @@ def collect(cfg: GitHubConfig, transport: Transport,
             + (f", excl. {', '.join(sorted(cfg.exclude_languages))}" if cfg.exclude_languages else "")
         ),
         daily=daily,
+        history_langs=history_langs,
+        history=history,
     )
+
+
+def collect_history(login: str, transport: Transport, since: datetime,
+                    now: datetime, span_days: int = 90) -> tuple[list[list], list[int]]:
+    """Every contribution since ``since``, in order, tagged with a language.
+
+    The contribution calendar is the backbone (it counts everything, including
+    private work); per-repository contributions say which language each one
+    was. Anything the calendar counts but no public repository explains is
+    private and tagged -1. Windows are 90 days so no repository can exceed
+    GitHub's 100-node page.
+    """
+    langs: list[list] = []
+    index: dict[tuple[str, str], int] = {}
+    seq: list[int] = []
+
+    def lang_id(repo: dict) -> int:
+        hit = repo_language(repo)
+        if hit is None:
+            return -1
+        if hit not in index:
+            index[hit] = len(langs)
+            langs.append([hit[0], hit[1]])
+        return index[hit]
+
+    start = since
+    while start < now:
+        end = min(now, start + timedelta(days=span_days) - timedelta(seconds=1))
+        data = transport(HISTORY_QUERY, {
+            "login": login,
+            "from": start.isoformat().replace("+00:00", "Z"),
+            "to": end.isoformat().replace("+00:00", "Z"),
+        })
+        cc = data["user"]["contributionsCollection"]
+        known: dict[str, list[int]] = {}
+        for item in cc["commitContributionsByRepository"]:
+            lid = lang_id(item["repository"])
+            for n in item["contributions"]["nodes"]:
+                known.setdefault(n["occurredAt"][:10], []).extend([lid] * int(n["commitCount"]))
+        for key in ("pullRequestContributionsByRepository", "issueContributionsByRepository",
+                    "pullRequestReviewContributionsByRepository"):
+            for item in cc[key]:
+                lid = lang_id(item["repository"])
+                for n in item["contributions"]["nodes"]:
+                    known.setdefault(n["occurredAt"][:10], []).append(lid)
+        for n in cc["repositoryContributions"]["nodes"]:
+            known.setdefault(n["occurredAt"][:10], []).append(lang_id(n["repository"]))
+        days = [(d["date"], d["contributionCount"])
+                for w in cc["contributionCalendar"]["weeks"] for d in w["contributionDays"]]
+        cal = dict(sorted(days))
+        cal_total = sum(cal.values())
+        known_total = sum(len(v) for v in known.values())
+        # Private = what the calendar counts beyond the public record, placed
+        # on the days where the calendar has more than we can explain. Repo
+        # timestamps (UTC) and calendar days (local) can disagree at midnight,
+        # so cap the private count at the window-level difference.
+        budget = max(0, cal_total - known_total)
+        per_day = {d: max(0, c - len(known.get(d, []))) for d, c in cal.items()}
+        for d in sorted(per_day, reverse=True):
+            excess = sum(per_day.values()) - budget
+            if excess <= 0:
+                break
+            per_day[d] -= min(per_day[d], excess)
+        for day in sorted(set(cal) | set(known)):
+            seq.extend(sorted(known.get(day, [])))
+            seq.extend([-1] * per_day.get(day, 0))
+        start = end + timedelta(seconds=1)
+    return langs, seq
 
 
 def load_cached(path: Path) -> Snapshot | None:

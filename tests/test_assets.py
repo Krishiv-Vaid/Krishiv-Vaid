@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 
 from profilegen.github_data import Language, Snapshot
-from profilegen.pipeline import koi_inputs
+from profilegen.pipeline import koi_inputs, synthetic_units
 from profilegen.stats import render_stats
 from profilegen.theme import DARK, LIGHT
 
@@ -75,16 +75,30 @@ def _snapshot(stale=False):
 @pytest.mark.parametrize("compact", [False, True])
 def test_stats_panel_labels_scope_and_values(theme, compact):
     snap = _snapshot()
-    _, _, meta = koi_inputs(snap.contributions, [(l.name, l.color, l.share) for l in snap.languages])
+    langs = [(l.name, l.color, l.share) for l in snap.languages]
+    _, _, meta = koi_inputs(synthetic_units(250, langs), langs)
     svg = render_stats(snap, meta, theme, width=560 if compact else 1000, compact=compact)
     ET.fromstring(svg)
     for needle in ("812", "incl. 40 private", "365d", "all-time", "owned, non-fork", "57",
-                   "Nisai", "C++", "2025-11-22"):
+                   "3 koi", "50/100 fed", "C++", "2025-11-22", "past 7 days"):
         assert needle in svg, needle
     assert "cached" not in svg
 
 
 def test_stats_panel_flags_stale_data():
     snap = _snapshot(stale=True)
-    _, _, meta = koi_inputs(snap.contributions, [])
+    _, _, meta = koi_inputs(synthetic_units(10, []), [])
     assert "cached 2026-11-22" in render_stats(snap, meta, DARK)
+
+
+def test_uptime_is_calendar_accurate():
+    from datetime import date
+
+    from profilegen.hero import uptime
+
+    born = date(2008, 6, 22)
+    assert uptime(born, date(2026, 11, 22)) == "18 years, 5 months, 0 days"
+    assert uptime(born, date(2026, 6, 21)) == "17 years, 11 months, 30 days"
+    assert uptime(born, date(2026, 6, 22)) == "18 years, 0 months, 0 days"
+    assert uptime(born, date(2027, 3, 1)) == "18 years, 8 months, 7 days"
+    assert uptime(born, date(2008, 7, 23)) == "0 years, 1 month, 1 day"

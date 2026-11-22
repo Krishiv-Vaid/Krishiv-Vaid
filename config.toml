@@ -6,17 +6,22 @@ login = "Krishiv-Vaid"
 # Rolling window for contribution metrics, in days (GitHub caps a single
 # contributionsCollection query at one year).
 window_days = 365
-# Repositories whose activity is excluded from koi/stats inputs. The profile
-# repository is excluded because its history is mostly asset regeneration.
-exclude_repos = ["Krishiv-Vaid/Krishiv-Vaid"]
+# Repositories whose activity is excluded from koi/stats inputs (none: bot
+# commits are never attributed to the user, so nothing needs filtering).
+exclude_repos = []
 # Markup / notebook languages are excluded from "programming language" metrics.
 exclude_languages = ["HTML", "CSS", "SCSS", "Jupyter Notebook", "TeX", "Makefile", "Dockerfile"]
 # Languages below this share are folded into "other" on the lily pads.
 min_language_share = 0.03
 
+[profile]
+# Used for the live "uptime" line in the hero panel.
+birthdate = "2008-06-22"
+
 [koi]
-# Pond is drawn at 224x112 native pixels and upscaled by an integer factor.
-scale = 4
-gif_scale = 3
+# Pond is drawn at 280x140 native pixels and upscaled by an integer factor
+# (3x = 840 px, which displays 1:1 in the GitHub README column).
+scale = 3
+gif_scale = 2
 frames = 300
 frame_ms = 80

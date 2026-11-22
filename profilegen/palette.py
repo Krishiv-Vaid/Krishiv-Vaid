@@ -40,6 +40,23 @@ def mute(color: str | RGB, tint: RGB | None = None, max_sat: float = 0.40,
     return out  # type: ignore[return-value]
 
 
+def koi_pigment(color: str | RGB) -> RGB:
+    """A koi-scale pigment from a linguist colour: vivid but not neon.
+
+    Every language keeps its own hue (so each one reads as a distinct colour
+    on the fish); saturation is lifted into a koi-like band and lightness is
+    kept mid-range so patches stand out against the ivory body and the water.
+    Near-greys (no real hue) become a metallic platinum.
+    """
+    rgb = hex_to_rgb(color) if isinstance(color, str) else color
+    h, l, s = colorsys.rgb_to_hls(*rgb)
+    if s < 0.12:
+        return (0.70, 0.72, 0.74)
+    s = min(0.82, max(0.58, s))
+    l = min(0.56, max(0.40, l))
+    return colorsys.hls_to_rgb(h, l, s)  # type: ignore[return-value]
+
+
 def shade_ramp(c: RGB) -> tuple[RGB, RGB, RGB, RGB]:
     """shadow, mid-dark, mid-light, highlight."""
     scales = (0.52, 0.74, 1.0, 1.18)

@@ -20,15 +20,21 @@ class GitHubConfig:
 
 @dataclass(frozen=True)
 class KoiConfig:
-    scale: int = 4
-    gif_scale: int = 3
+    scale: int = 3
+    gif_scale: int = 2
     frames: int = 300
     frame_ms: int = 80
 
 
 @dataclass(frozen=True)
+class ProfileConfig:
+    birthdate: str = "2008-06-22"
+
+
+@dataclass(frozen=True)
 class Config:
     github: GitHubConfig = field(default_factory=GitHubConfig)
+    profile: ProfileConfig = field(default_factory=ProfileConfig)
     koi: KoiConfig = field(default_factory=KoiConfig)
 
 
@@ -44,5 +50,6 @@ def load(path: Path = ROOT / "config.toml") -> Config:
             exclude_languages=tuple(gh.get("exclude_languages", ())),
             min_language_share=float(gh.get("min_language_share", 0.03)),
         ),
+        profile=ProfileConfig(birthdate=str(raw.get("profile", {}).get("birthdate", "2008-06-22"))),
         koi=KoiConfig(**{k: koi[k] for k in koi if k in KoiConfig.__dataclass_fields__}),
     )

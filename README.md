@@ -8,10 +8,10 @@
 -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/portrait-dark-compact.svg">
-  <source media="(max-width: 640px)" srcset="assets/portrait-light-compact.svg">
-  <source media="(prefers-color-scheme: dark)" srcset="assets/portrait-dark.svg">
-  <img src="assets/portrait-light.svg" width="100%" alt="Krishiv Vaid, drawn in monospaced characters from a photograph, beside a terminal-style summary: University of Waterloo, B.Math in Statistics and Computer Science; focus on systems, ML infrastructure and mathematics; Software Engineer at USAMO Guide and Waterloo Rocketry, Machine Learning Engineer at Orangutany; research in AI for science and mathematics at MIT CSAIL and harmonic analysis at the University of Toronto; Python, C++, TypeScript; krishvaid.me; kvaid@uwaterloo.ca.">
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-dark.svg">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light.svg" width="100%" alt="Krishiv Vaid, drawn in monospaced characters from a photograph, beside a terminal-style summary: University of Waterloo, studying math, computer science and statistics; uptime counted from June 22, 2008; focus on systems, ML infrastructure and mathematics; Software Engineer at USAMO Guide and Waterloo Rocketry, Machine Learning Engineer at Orangutany; research in AI for science and mathematics at MIT CSAIL and harmonic analysis at the University of Toronto; Python, C++, Java; krishvaid.me; kvaid@uwaterloo.ca.">
 </picture>
 
 <br><br>
@@ -23,9 +23,11 @@
   <img src="assets/sections/01-about-light.svg" width="100%" alt="01 about">
 </picture>
 
-I study statistics and computer science at the **University of Waterloo**. Most of what I build sits where software meets numerics: simulators that are checked against conservation laws, a deep learning framework written from first principles in C++20, and production infrastructure for an open-source math platform used by 130,000+ students. On the research side I work on AI for mathematics at MIT CSAIL, after a summer of harmonic analysis at the University of Toronto.
+I study statistics and computer science at the **University of Waterloo**.
 
-The problems I keep coming back to are systems programming, distributed systems, ML infrastructure, and high-performance scientific computing. I like code whose correctness can be measured: tests that pin down the maths, benchmarks with stated hardware, and results anyone can reproduce.
+I like building things where code and math meet: physics simulations, machine learning tools, and the web apps around them. Right now that means USAMO Guide, ground software for Waterloo Rocketry, and research on AI for mathematics at MIT CSAIL.
+
+When I'm not coding, I'm usually playing chess, swimming, or stuck on a math problem.
 
 <br>
 
@@ -43,7 +45,7 @@ The problems I keep coming back to are systems programming, distributed systems,
 - React/Gatsby + TypeScript frontend with Tailwind CSS; Supabase backend with Postgres row-level security, auth, and **7 edge functions** for groups and admin roles.
 - Automated compilation of **429 Asymptote diagrams** to SVG; set up Vercel, Storybook, Lighthouse CI and linting.
 
-**Waterloo Rocketry** · Software Engineer<br>
+**[Waterloo Rocketry](https://www.waterloorocketry.com)** · Software Engineer<br>
 <sub>Sep 2026 – present · Waterloo, ON · React · TypeScript · telemetry · open source</sub>
 
 - Ground-systems software for the University of Waterloo's student rocketry team, including a **live sensor-monitoring dashboard**.
@@ -61,13 +63,13 @@ The problems I keep coming back to are systems programming, distributed systems,
 
 <sub><b>research</b></sub>
 
-**MIT CSAIL** · Researcher, AI for Science & Mathematics<br>
+**[MIT CSAIL](https://www.csail.mit.edu)** · Researcher, AI for Science & Mathematics<br>
 <sub>Nov 2026 – present · formal proof · machine learning</sub>
 
 - Getting machine learning models to write proofs that can actually be checked, starting with formalisation: restating a problem in a proof assistant so a computer verifies every step.
 - Studying how models search for proofs in that setting, where the answer is never fuzzy: the proof either checks or it doesn't.
 
-**University of Toronto**, Department of Mathematics · Research Assistant, Harmonic Analysis<br>
+**[University of Toronto, Department of Mathematics](https://www.math.toronto.edu)** · Research Assistant, Harmonic Analysis<br>
 <sub>Jun – Sep 2026 · Toronto, ON · Fourier analysis · NumPy</sub>
 
 - Investigated L<sup>p</sup> bounds for maximal averages with Littlewood–Paley and Calderón–Zygmund methods.
@@ -170,39 +172,34 @@ The problems I keep coming back to are systems programming, distributed systems,
 </picture>
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/koi.webp" width="840" alt="A pixel-art Japanese koi pond: a koi swims a new wandering route each day under a vermilion bridge, between lily pads tinted by my most-used languages. The koi grows with every GitHub contribution over the last 365 days, and its patches take the colour of my top language.">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/koi.webp" width="840" alt="A pixel-art Japanese koi pond fed by my GitHub contributions: every 100 contributions raise one koi, and every 10 paint a patch on it in the colour of the language they were written in. The koi swim new wandering routes each day under a vermilion bridge, between lily pads tinted by my most-used languages.">
 </p>
 
 <picture>
   <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-dark-compact.svg">
   <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light-compact.svg">
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-dark.svg">
-  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light.svg" width="100%" alt="GitHub statistics, regenerated daily from the GitHub GraphQL API: the koi's age class and length, contributions over a rolling 365-day window, commits, pull requests, public repositories, stars, followers, language distribution and weekly activity.">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light.svg" width="100%" alt="GitHub statistics, regenerated daily from the GitHub GraphQL API: how many koi are swimming and how far the current one has grown, contributions by language, contributions over a rolling 365-day window, commits, pull requests, public repositories, stars, followers, language distribution, weekly activity and the past seven days.">
 </picture>
 
 <details>
-<summary><sub>&nbsp;how the koi grows</sub></summary>
+<summary><sub>&nbsp;how the koi grow</sub></summary>
 <br>
 
-The pond is pixel art, drawn at 210 × 106 native pixels by [`generate_koi.py`](scripts/generate_koi.py) and scaled 4× with nearest-neighbour sampling so every pixel stays crisp. It's fed by my contributions over a **rolling 365-day window**, minus commits to this profile repository, which are mostly asset regeneration. The koi's length follows a concave curve, `g = min(1, (c / 2800)^0.45)`, so **every contribution makes it a little bigger**. Early contributions grow it fastest.
+The pond is pixel art, drawn at 280 × 140 native pixels by [`generate_koi.py`](scripts/generate_koi.py) and scaled 3× with nearest-neighbour sampling, so it shows 1:1 at 840 px and every pixel stays crisp. It's fed by **every contribution I've made**, in order:
 
-| age class | contributions | what changes |
-|:--|:--|:--|
-| 01 Fry | 0+ | small, plain body, one patch |
-| 02 Tosai | 100+ | second patch, pelvic fins, longer fins |
-| 03 Nisai | 400+ | spots in my second language's colour, the first lotus blooms |
-| 04 Sansai | 1,000+ | butterfly fins, sparkling gin-rin scales |
-| 05 Jumbo | 2,200+ | full pattern, flowing fins, more lotus |
-
-- **Languages:** each of the seven lily pads stands for a share of my code (bytes in owned public non-fork repositories, markup excluded) and takes that language's [linguist](https://github.com/github-linguist/linguist) colour. The koi's patches use my top language's colour.
-- **Movement:** the koi swims a closed Fourier curve. Its spine follows the path by arc length, so its body bends through turns, with a travelling tail-beat wave and flapping fins on top. The route is re-seeded every day, so it wanders somewhere new each time, while the 24-second animation still loops seamlessly.
-- **Automation:** the workflow runs daily and publishes only changed files to the [`output`](https://github.com/Krishiv-Vaid/Krishiv-Vaid/tree/output) branch, so `main` gets no bot commits.
+- **Every 100 contributions raise one koi.** Contributions 1–100 raise the first koi, 101–200 the second, and so on.
+- **Each contribution makes the growing koi a little bigger.** It goes from fry (Fry → Tosai → Nisai) to adult over its 100. Adults are all roughly the same size, so the pond stays in proportion.
+- **Every 10 contributions paint a patch** in the colour of the language they were written in ([linguist](https://github.com/github-linguist/linguist) colours, made a little more vivid). Each single contribution grows the patch in progress. Private work and repositories without code yet show as black markings.
+- **At 100 the koi is fully grown.** Its markings are frozen, its fins get longer, gin-rin scales sparkle and a lotus blooms. Then a new fry hatches.
+- **Lily pads** are the languages I write the most, one pad per share of code (bytes in owned public non-fork repositories, markup excluded).
+- **Routes change every day.** Each koi swims its own closed Fourier curve, re-seeded daily, with its spine following the path by arc length so its body bends through turns. The 24-second animation still loops seamlessly.
 
 The idea of a creature that grows from your GitHub activity comes from [Git Tulkun](https://github.com/PramudithaN/git-tulkun) (MIT); see [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md).
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/img/koi-stages-dark.png">
-  <img src="docs/img/koi-stages-light.png" width="100%" alt="The koi at each age class, from Fry to Jumbo.">
+  <img src="docs/img/koi-stages-light.png" width="100%" alt="How the pond fills: a fry at 20 contributions, patches filling in at 60, the first adult and a new fry at 100, and growing schools at 250, 600 and 1,300 contributions.">
 </picture>
 </details>
 
@@ -221,6 +218,8 @@ The idea of a creature that grows from your GitHub activity comes from [Git Tulk
   <source media="(prefers-color-scheme: dark)" srcset="assets/beyond-dark.svg">
   <img src="assets/beyond-light.svg" width="100%" alt="2562 Chess.com peak, top 0.01%, playing since age 3; 14 years of swimming, 10 competitive, sprints; 5.70 second speedcubing personal best; first hackathon win with Centsible at BHSS.">
 </picture>
+
+&nbsp;
 
 - **Chess.** I've played since I was 3. Top 0.01% on Chess.com, with a 2562 peak rating.
 - **Swimming.** I've been swimming for 14 years and racing competitively for 10. Sprints are my favourite.

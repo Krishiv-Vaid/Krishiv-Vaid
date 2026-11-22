@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+from datetime import date
 
 from .ascii_art import AsciiGrid
 from .svg import FONT_STACK, document, font_face, mono_width, text_run
@@ -18,7 +19,7 @@ SECTIONS: list[tuple[str | None, list[tuple[str, str]]]] = [
     (None, [
         ("user", "Krishiv Vaid"),
         ("institution", "University of Waterloo"),
-        ("program", "B.Math · Statistics & CS"),
+        ("program", "Math, CS & Statistics"),
         ("focus", "Systems · ML Infra · Mathematics"),
         ("interests", "Distributed Systems, SciComp, AI"),
     ]),
@@ -32,8 +33,8 @@ SECTIONS: list[tuple[str | None, list[tuple[str, str]]]] = [
         ("uoft.math", "Harmonic Analysis"),
     ]),
     ("languages", [
-        ("primary", "Python, C++, TypeScript"),
-        ("also", "JavaScript, SQL, Java, LaTeX"),
+        ("primary", "Python, C++, Java"),
+        ("also", "TypeScript, JavaScript, SQL, LaTeX"),
     ]),
     ("contact", [
         ("portfolio", "krishvaid.me"),
@@ -44,6 +45,25 @@ SECTIONS: list[tuple[str | None, list[tuple[str, str]]]] = [
         ("chess", "Chess.com top 0.01% · 2562 peak"),
     ]),
 ]
+
+
+def uptime(born: date, today: date) -> str:
+    """Calendar-accurate age: '18 years, 5 months, 0 days'."""
+    y = today.year - born.year
+    m = today.month - born.month
+    d = today.day - born.day
+    if d < 0:
+        m -= 1
+        prev_month_end = date(today.year, today.month, 1).toordinal() - 1
+        d += date.fromordinal(prev_month_end).day
+    if m < 0:
+        y -= 1
+        m += 12
+
+    def unit(n: int, word: str) -> str:
+        return f"{n} {word}{'' if n == 1 else 's'}"
+
+    return f"{unit(y, 'year')}, {unit(m, 'month')}, {unit(d, 'day')}"
 
 
 @dataclass(frozen=True)
@@ -57,7 +77,7 @@ class HeroLayout:
     panel_cols: int = 0  # computed from available width when 0
 
 
-def _panel_lines(cols: int) -> list[list[tuple[str, str]]]:
+def _panel_lines(cols: int, up: str | None = None) -> list[list[tuple[str, str]]]:
     """Build the right-hand panel as rows of (text, class) spans, ``cols`` wide."""
     rows: list[list[tuple[str, str]]] = []
     user, host = HOST
@@ -67,6 +87,8 @@ def _panel_lines(cols: int) -> list[list[tuple[str, str]]]:
         ("─" * (cols - len(head)), "hr"),
     ])
     for title, items in SECTIONS:
+        if title is None and up:
+            items = items[:1] + [("uptime", up)] + items[1:]
         if title is not None:
             rows.append([])
             label = f"─ {title} "
@@ -151,7 +173,7 @@ TITLE = "Krishiv Vaid: character portrait and profile summary"
 
 
 def render_hero(grid: AsciiGrid, theme: Theme, layout: HeroLayout = HeroLayout(),
-                line_height: float = 2.0, palette_strip: bool = True) -> str:
+                line_height: float = 2.0, palette_strip: bool = True, up: str | None = None) -> str:
     """Wide layout: portrait left, panel right."""
     L = layout
     ps = L.portrait_size
@@ -161,7 +183,7 @@ def render_hero(grid: AsciiGrid, theme: Theme, layout: HeroLayout = HeroLayout()
     panel_x = L.pad + portrait_w + L.gap
     avail = L.width - panel_x - L.pad
     cols = L.panel_cols or int(avail // (L.panel_size * MONO_ADVANCE))
-    lines = _panel_lines(cols)
+    lines = _panel_lines(cols, up)
     lh = L.panel_size * L.panel_line
     panel_h = len(lines) * lh + (lh * 1.6 if palette_strip else 0)
 
@@ -181,12 +203,12 @@ def render_hero(grid: AsciiGrid, theme: Theme, layout: HeroLayout = HeroLayout()
 
 def render_hero_compact(grid: AsciiGrid, theme: Theme, width: float = 560,
                         pad: float = 26, panel_size: float = 15.0,
-                        line_height: float = 2.0) -> str:
+                        line_height: float = 2.0, up: str | None = None) -> str:
     """Narrow layout for phones: portrait stacked above a larger-type panel."""
     ps = (width - 2 * pad) / (grid.cols * MONO_ADVANCE)
     portrait_h = grid.rows * ps * MONO_ADVANCE * line_height
     cols = int((width - 2 * pad) // (panel_size * MONO_ADVANCE))
-    lines = _panel_lines(cols)
+    lines = _panel_lines(cols, up)
     lh = panel_size * 1.7
     panel_y = pad + portrait_h + 18
     height = panel_y + len(lines) * lh + pad

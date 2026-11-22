@@ -40,9 +40,9 @@ python -m pytest -q
 
 | what | command | committed to |
 |--|--|--|
-| hero portrait | `python scripts/generate_portrait.py [--variants]` | `assets/portrait-*.svg` |
+| hero portrait | `python scripts/generate_portrait.py [--variants]` | `assets/portrait-*.svg` (reference); daily copy on `output` |
 | cards, badges, toolkit, tiles, section rules | `python scripts/generate_static.py` | `assets/` |
-| koi age-class previews | `python scripts/generate_koi.py --stages docs/img/koi-stages.png` | `docs/img/` |
+| pond growth previews | `python scripts/generate_koi.py --stages docs/img/koi-stages.png` | `docs/img/` |
 | GitHub data, koi pond, stats | see the workflow below | `output` branch |
 
 Run the dynamic pipeline locally:
@@ -57,7 +57,7 @@ python scripts/generate_stats.py --snapshot out/snapshot.json --koi out/koi.json
 Try other inputs without touching GitHub:
 
 ```bash
-python scripts/generate_koi.py --contributions 1800 \
+python scripts/generate_koi.py --contributions 450 \
   --languages "C++:#f34b7d:0.55,Python:#3572A5:0.30,TypeScript:#3178c6:0.15" --out /tmp/pond
 ```
 
@@ -113,7 +113,7 @@ the generators. It:
 4. re-renders the koi pond only if its inputs hash changed. The hash covers
    the contribution count, the lily-pad colours, the day (the route is
    re-seeded daily), the pond config and the renderer's source;
-5. renders the stats panel;
+5. renders the hero (uptime) and the stats panel;
 6. if any asset differs from what is published, force-pushes `out/` to
    `output` as a single orphan commit. `main` never receives bot commits, and
    binary churn never builds up in history.
@@ -123,7 +123,7 @@ the generators. It:
 | metric | scope |
 |--|--|
 | contributions | contribution calendar total over the rolling window (default 365 days). Includes private contributions as a bare count if the profile shows them |
-| koi input | the calendar total minus commits to `exclude_repos` (default: this repo). Bot-authored commits are never attributed to the user, so they never count |
+| koi pond | every contribution since the account was created, in order. Bot-authored commits are never attributed to the user, so they never count |
 | commits | commit contributions in the window |
 | pull requests | all-time authored PRs, any repository; merged count shown alongside |
 | public repos / stars | owned, public, non-fork repositories |
@@ -145,15 +145,29 @@ with no extra permissions as the repository secret `PROFILE_TOKEN`.
 
 ### The koi pond
 
-- Scene: 210 x 106 native pixels, scaled 4x (WebP) or 3x (GIF) with
-  nearest-neighbour sampling, so it displays 1:1 at 840 px and pixels stay square.
-- Size: `length = 16 + 58 g` native pixels, with `g = min(1, (c / 2800)^0.45)`.
-  It is strictly increasing in the contribution count.
-- Movement: a closed random Fourier curve (re-seeded from `login:date`), traversed
-  by arc length with a periodic speed wobble. The spine samples the path behind
-  the head, plus a travelling wave with an integer number of beats per loop. Big
-  fish get a smoother path so they never fold.
-- Colours: seven lily pads assigned to languages by largest remainder; the koi's
-  patches use the top language, spots (Nisai and up) the second.
-- Encoding: lossless animated WebP (true alpha, a few hundred KB) and a GIF with
-  an exact shared palette and a transparent index.
+- Scene: 280 x 140 native pixels, scaled 3x (WebP, 840 px, shown 1:1) or 2x (GIF)
+  with nearest-neighbour sampling.
+- Food: every contribution since the account was created, in order
+  (`github_data.collect_history`). The contribution calendar gives the totals,
+  including private work; per-repository contributions say which language each
+  one was (the repo's primary language, or a topic such as `cpp20` when the repo
+  has no code yet). Whatever the calendar counts but no public repository
+  explains is private, shown as black (sumi) markings.
+- Koi: every 100 contributions raise one koi (`koi/evolution.py`). Length grows
+  with every contribution, `13 + 37 * (fed / 100)^0.7` native pixels. Every
+  10 contributions add a patch in that block's language, and the patch in
+  progress grows with each one. At 100 the markings freeze, fins lengthen,
+  gin-rin sparkles, a lotus blooms and a new fry hatches. The pond holds 14 koi.
+- Pigments: `palette.koi_pigment` keeps each linguist hue but lifts saturation,
+  so every language is its own colour.
+- Movement: each koi swims its own closed random Fourier curve, seeded from
+  `login:date:index`, by arc length. Small fry do two laps per loop. Paths for
+  bigger fish are smoother, so they never fold.
+- Encoding: lossless animated WebP (true alpha) and a GIF with an exact shared
+  palette and a transparent index.
+
+### The hero
+
+The hero lives on the `output` branch so its `uptime` line (from
+`[profile] birthdate` in `config.toml`, dated in Toronto time) refreshes daily.
+`assets/portrait-*.svg` are the same render, committed for reference.

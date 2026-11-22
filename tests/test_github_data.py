@@ -4,7 +4,7 @@ from datetime import datetime, timezone
 import pytest
 
 from profilegen.config import GitHubConfig
-from profilegen.github_data import CONTRIB_QUERY, REPOS_QUERY, GitHubError, Snapshot, _retry_after, collect, load_cached
+from profilegen.github_data import CONTRIB_QUERY, HISTORY_QUERY, REPOS_QUERY, GitHubError, Snapshot, _retry_after, collect, collect_history, load_cached, repo_language
 
 
 def repo(name, stars, langs):
@@ -20,6 +20,8 @@ def fake_transport(pages, contrib):
         if query is REPOS_QUERY:
             idx = 0 if variables["cursor"] is None else int(variables["cursor"])
             return {"user": pages[idx], "rateLimit": {"remaining": 4999}}
+        if query is HISTORY_QUERY:
+            return {"user": {"contributionsCollection": EMPTY_HISTORY}}
         assert query is CONTRIB_QUERY
         assert variables["from"].endswith("Z") and variables["to"].endswith("Z")
         return {"user": {"contributionsCollection": contrib}}
@@ -28,8 +30,16 @@ def fake_transport(pages, contrib):
     return call
 
 
+EMPTY_HISTORY = {
+    "contributionCalendar": {"weeks": []},
+    "commitContributionsByRepository": [], "pullRequestContributionsByRepository": [],
+    "issueContributionsByRepository": [], "pullRequestReviewContributionsByRepository": [],
+    "repositoryContributions": {"nodes": []},
+}
+
+
 def page(nodes, has_next=False, cursor=None):
-    return {"login": "octo", "createdAt": "2020-01-01T00:00:00Z",
+    return {"login": "octo", "createdAt": "2026-10-01T00:00:00Z",
             "followers": {"totalCount": 12}, "pullRequests": {"totalCount": 30},
             "mergedPullRequests": {"totalCount": 25},
             "repositories": {"totalCount": 3, "pageInfo": {"hasNextPage": has_next, "endCursor": cursor},
@@ -148,3 +158,64 @@ def test_http_transport_surfaces_graphql_errors(monkeypatch):
                         lambda req, timeout: Resp(json.dumps({"errors": [{"message": "boom"}]}).encode()))
     with pytest.raises(GitHubError, match="boom"):
         github_data.http_transport("t")("q", {})
+
+
+def _repo(name, lang=None, topics=()):
+    return {"nameWithOwner": name,
+            "primaryLanguage": {"name": lang[0], "color": lang[1]} if lang else None,
+            "repositoryTopics": {"nodes": [{"topic": {"name": t}} for t in topics]}}
+
+
+def test_repo_language_falls_back_to_topics():
+    assert repo_language(_repo("a", ("Python", "#3572A5"))) == ("Python", "#3572A5")
+    assert repo_language(_repo("b", None, ("deep-learning", "cpp20"))) == ("C++", "#f34b7d")
+    assert repo_language(_repo("c", None, ("privacy",))) is None
+
+
+def test_history_is_chronological_tagged_and_matches_the_calendar():
+    window = {
+        "contributionCalendar": {"weeks": [{"contributionDays": [
+            {"date": "2026-11-01", "contributionCount": 3},
+            {"date": "2026-11-02", "contributionCount": 0},
+            {"date": "2026-11-03", "contributionCount": 4},
+        ]}]},
+        "commitContributionsByRepository": [
+            {"repository": _repo("o/py", ("Python", "#3572A5")),
+             "contributions": {"nodes": [{"occurredAt": "2026-11-01T00:00:00Z", "commitCount": 2}]}},
+            {"repository": _repo("o/eng", None, ("cpp20",)),
+             "contributions": {"nodes": [{"occurredAt": "2026-11-03T00:00:00Z", "commitCount": 2}]}},
+        ],
+        "pullRequestContributionsByRepository": [
+            {"repository": _repo("o/py", ("Python", "#3572A5")),
+             "contributions": {"nodes": [{"occurredAt": "2026-11-03T10:00:00Z"}]}}],
+        "issueContributionsByRepository": [],
+        "pullRequestReviewContributionsByRepository": [],
+        "repositoryContributions": {"nodes": []},
+    }
+    calls = []
+
+    def t(q, v):
+        calls.append(v)
+        return {"user": {"contributionsCollection": window if len(calls) == 1 else EMPTY_HISTORY}}
+
+    since = datetime(2026, 10, 1, tzinfo=timezone.utc)
+    langs, seq = collect_history("octo", t, since, datetime(2027, 3, 1, tzinfo=timezone.utc))
+    assert len(calls) == 2  # 90-day windows
+    names = [langs[i][0] if i >= 0 else None for i in seq]
+    # day 1: 2 Python + 1 private; day 3 (ordered by language within a day): Python PR, 2 C++, 1 private
+    assert names == ["Python", "Python", None, "Python", "C++", "C++", None]
+    assert len(seq) == 7  # equals the calendar total
+
+
+def test_history_never_exceeds_the_calendar_across_midnight_skew():
+    window = dict(EMPTY_HISTORY)
+    window["contributionCalendar"] = {"weeks": [{"contributionDays": [
+        {"date": "2026-11-01", "contributionCount": 2}, {"date": "2026-11-02", "contributionCount": 0}]}]}
+    window["commitContributionsByRepository"] = [
+        {"repository": _repo("o/py", ("Python", "#3572A5")),
+         "contributions": {"nodes": [{"occurredAt": "2026-11-01T00:00:00Z", "commitCount": 1},
+                                     {"occurredAt": "2026-11-02T00:00:00Z", "commitCount": 1}]}}]
+    langs, seq = collect_history("o", lambda q, v: {"user": {"contributionsCollection": window}},
+                                 datetime(2026, 10, 15, tzinfo=timezone.utc),
+                                 datetime(2026, 11, 5, tzinfo=timezone.utc))
+    assert len(seq) == 2 and -1 not in seq

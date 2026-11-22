@@ -10,6 +10,7 @@ on:
       - "profilegen/**"
       - "scripts/**"
       - "config.toml"
+      - "source/**"
       - "requirements.txt"
       - ".github/workflows/update-profile.yml"
 
@@ -52,6 +53,9 @@ jobs:
       - name: Render koi pond (reused when inputs are unchanged)
         run: python scripts/generate_koi.py --snapshot out/snapshot.json --out out --reuse previous
 
+      - name: Render hero (refreshes the uptime line)
+        run: python scripts/generate_portrait.py --out out
+
       - name: Render stats panel
         run: python scripts/generate_stats.py --snapshot out/snapshot.json --koi out/koi.json --out out
 
@@ -60,7 +64,7 @@ jobs:
           python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
           import json
           s = json.load(open("out/snapshot.json")); k = json.load(open("out/koi.json"))
-          print(f"**{k['stage']} koi**, {k['length_px']} px · {s['contributions']} contributions / {s['window_days']} d"
+          print(f"**{k['koi']} koi** ({k['adults']} adult, current {k['current_fed']}/100) · {k['contributions']} contributions all-time"
                 f" · stale={s['stale']}")
           print()
           print("| file | bytes |\n|--|--|")

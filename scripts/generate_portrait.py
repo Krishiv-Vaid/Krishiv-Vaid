@@ -2,6 +2,7 @@
 """Generate the hero portrait assets.
 
     python scripts/generate_portrait.py                 # assets/portrait-{dark,light}.svg
+    python scripts/generate_portrait.py --out out       # daily: refreshes the uptime line
     python scripts/generate_portrait.py --variants      # + docs/img/portrait-variants.png
     python scripts/generate_portrait.py --from-photo me.jpg --crop 185,95,995,1065
                                                         # rebuild source/portrait-cutout.png
@@ -15,14 +16,17 @@ from __future__ import annotations
 
 import argparse
 import sys
+from datetime import date, datetime
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from PIL import Image, ImageDraw, ImageFont  # noqa: E402
 
 from profilegen.ascii_art import AsciiParams, GlyphAtlas, convert, load_cutout, with_overrides  # noqa: E402
-from profilegen.hero import render_hero, render_hero_compact  # noqa: E402
+from profilegen import config  # noqa: E402
+from profilegen.hero import render_hero, render_hero_compact, uptime  # noqa: E402
 from profilegen.preview import render_grid_png  # noqa: E402
 from profilegen.theme import DARK, FONT_REGULAR, LIGHT, ROOT  # noqa: E402
 
@@ -45,8 +49,8 @@ FINAL = AsciiParams(
     edge_weight=0.3,
     local_contrast=0.5,
     local_radius=0.03,
-    fade_start=0.60,
-    fade_end=0.94,
+    fade_start=0.58,
+    fade_end=0.90,
     fade_to=0.0,
 )
 
@@ -110,7 +114,12 @@ def main() -> None:
     ap.add_argument("--crop", default="185,95,995,1065")
     ap.add_argument("--variants", action="store_true")
     ap.add_argument("--out", type=Path, default=ROOT / "assets")
+    ap.add_argument("--today", help="date for the uptime line (default: today in Toronto)")
     args = ap.parse_args()
+    cfg = config.load()
+    today = (date.fromisoformat(args.today) if args.today
+             else datetime.now(ZoneInfo("America/Toronto")).date())
+    up = uptime(date.fromisoformat(cfg.profile.birthdate), today)
 
     if args.from_photo:
         make_cutout(args.from_photo, tuple(int(v) for v in args.crop.split(",")))
@@ -120,11 +129,12 @@ def main() -> None:
     args.out.mkdir(parents=True, exist_ok=True)
     for theme in (DARK, LIGHT):
         path = args.out / f"portrait-{theme.name}.svg"
-        path.write_text(render_hero(grid, theme), encoding="utf-8")
-        print(f"wrote {path.relative_to(ROOT)}  ({path.stat().st_size / 1024:.0f} KiB)")
+        path.write_text(render_hero(grid, theme, up=up), encoding="utf-8")
+        print(f"wrote {path}  ({path.stat().st_size / 1024:.0f} KiB)")
         path = args.out / f"portrait-{theme.name}-compact.svg"
-        path.write_text(render_hero_compact(grid, theme), encoding="utf-8")
-        print(f"wrote {path.relative_to(ROOT)}  ({path.stat().st_size / 1024:.0f} KiB)")
+        path.write_text(render_hero_compact(grid, theme, up=up), encoding="utf-8")
+        print(f"wrote {path}  ({path.stat().st_size / 1024:.0f} KiB)")
+    print(f"uptime {up} (as of {today})")
     (ROOT / "source" / "portrait.txt").write_text("\n".join(r.rstrip() for r in grid.chars) + "\n")
 
     if args.variants:
