@@ -79,9 +79,11 @@ def test_stats_panel_labels_scope_and_values(theme, compact):
     _, _, meta = koi_inputs(synthetic_units(250, langs), langs)
     svg = render_stats(snap, meta, theme, width=560 if compact else 1000, compact=compact)
     ET.fromstring(svg)
-    for needle in ("812", "incl. 40 private", "365d", "all-time", "owned, non-fork", "57",
+    for needle in ("812", "incl. 40 private", "365d", "all-time", "owned, non-fork",
                    "3 koi", "50/100 fed", "C++", "2025-11-22", "past 7 days"):
         assert needle in svg, needle
+    # trimmed for job applications: no vanity counts
+    assert "followers" not in svg and "stars" not in svg
     assert "cached" not in svg
 
 

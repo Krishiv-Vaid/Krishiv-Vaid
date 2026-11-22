@@ -11,7 +11,7 @@
   <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-dark-compact.svg">
   <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light-compact.svg">
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-dark.svg">
-  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light.svg" width="100%" alt="Krishiv Vaid, drawn in monospaced characters from a photograph, beside a terminal-style summary: University of Waterloo, studying math, computer science and statistics; uptime counted from June 22, 2008; focus on systems, ML infrastructure and mathematics; Software Engineer at USAMO Guide and Waterloo Rocketry, Machine Learning Engineer at Orangutany; research in AI for science and mathematics at MIT CSAIL and harmonic analysis at the University of Toronto; Python, C++, Java; krishvaid.me; kvaid@uwaterloo.ca.">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/portrait-light.svg" width="100%" alt="Krishiv Vaid, drawn in monospaced characters from a photograph, beside a terminal-style summary: University of Waterloo, studying math, computer science and statistics; uptime counted from June 22, 2008; focus on ML, AI4Science and mathematics; Software Engineer at USAMO Guide and Waterloo Rocketry, Machine Learning Engineer at Orangutany; research in AI for science and mathematics at MIT CSAIL and harmonic analysis at the University of Toronto; Python, C++, Java; krishvaid.me; kvaid@uwaterloo.ca.">
 </picture>
 
 <br><br>
@@ -29,6 +29,8 @@ I like building things where code and math meet: physics simulations, machine le
 
 When I'm not coding, I'm usually playing chess, swimming, or stuck on a math problem.
 
+**Every 100 GitHub contributions grow a new koi** in the [pond below](#koi-pond), painted in the colours of the languages I write.
+
 <br>
 
 <picture>
@@ -38,48 +40,17 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
   <img src="assets/sections/02-experience-light.svg" width="100%" alt="02 experience">
 </picture>
 
-**[USAMO Guide](https://usamoguide.com)** · Software Engineer<br>
-<sub>Aug 2026 – present · Toronto, ON · TypeScript · React · Gatsby · Supabase · PostgreSQL</sub>
-
-- Core infrastructure for an open-source olympiad math platform serving **130,000+ students** across **165 lessons** and a **31,000+ problem** bank.
-- React/Gatsby + TypeScript frontend with Tailwind CSS; Supabase backend with Postgres row-level security, auth, and **7 edge functions** for groups and admin roles.
-- Automated compilation of **429 Asymptote diagrams** to SVG; set up Vercel, Storybook, Lighthouse CI and linting.
-
-**[Waterloo Rocketry](https://www.waterloorocketry.com)** · Software Engineer<br>
-<sub>Sep 2026 – present · Waterloo, ON · React · TypeScript · telemetry · open source</sub>
-
-- Ground-systems software for the University of Waterloo's student rocketry team, including a **live sensor-monitoring dashboard**.
-- Typed, reusable React components that stream and chart live telemetry for operators during engine tests.
-- Features shipped through code review in the team's open-source repositories, alongside the avionics and firmware sub-teams.
-
-**Orangutany** · Machine Learning Engineer<br>
-<sub>Apr – Aug 2026 · Toronto, ON · Node.js · Next.js · Capacitor · Python · computer vision</sub>
-
-- Node.js backend for a computer-vision species-identification API that ranks the top-3 matches by confidence.
-- Multi-photo validation that flags mixed-species uploads (top match < 90% or margin < 15 pts).
-- Next.js/React + Capacitor iOS app (Turso, Google OAuth, Stripe) backed by **300 automated tests**; a **143-species** guide built on Python/PIL image curation and GBIF range-map pipelines.
-
-<sub>&nbsp;</sub>
+- **[USAMO Guide](https://usamoguide.com)** · Software Engineer · Aug 2026–present · infrastructure for an olympiad math platform used by 130,000+ students
+- **[Waterloo Rocketry](https://www.waterloorocketry.com)** · Software Engineer · Sep 2026–present · ground-systems software and live telemetry dashboards for engine tests
+- **Orangutany** · Machine Learning Engineer · Apr–Aug 2026 · computer-vision species identification, from the Node.js API to an iOS app
 
 <sub><b>research</b></sub>
 
-**[MIT CSAIL](https://www.csail.mit.edu)** · Researcher, AI for Science & Mathematics<br>
-<sub>Nov 2026 – present · formal proof · machine learning</sub>
+- **[MIT CSAIL](https://www.csail.mit.edu)** · Researcher, AI for Science & Mathematics · Nov 2026–present · formalising math so proofs written by models can be machine-checked
+- **[University of Toronto, Department of Mathematics](https://www.math.toronto.edu)** · Research Assistant, Harmonic Analysis · Jun–Sep 2026 · L<sup>p</sup> bounds for maximal averages
+- **STEMinate** · Research Intern, Brain–Computer Interfaces · Apr–Aug 2025 · sole author of *[Dream Engineering](https://doi.org/10.5281/zenodo.24373952)*
 
-- Formalising math problems in a proof assistant so that proofs written by machine learning models can be checked by a computer.
-- Studying how language models search for proofs in formal systems.
-
-**[University of Toronto, Department of Mathematics](https://www.math.toronto.edu)** · Research Assistant, Harmonic Analysis<br>
-<sub>Jun – Sep 2026 · Toronto, ON · Fourier analysis · NumPy</sub>
-
-- Investigated L<sup>p</sup> bounds for maximal averages with Littlewood–Paley and Calderón–Zygmund methods.
-- Surveyed **40+ papers** on Fourier restriction; wrote NumPy checks of conjectured decay rates for oscillatory integrals.
-
-**STEMinate** · Research Intern, Brain–Computer Interfaces<br>
-<sub>Apr – Aug 2025 · Toronto, ON · neurotechnology · neuroethics</sub>
-
-- Sole author of *[Dream Engineering](https://doi.org/10.5281/zenodo.24373952)* (**50 sources**), guided by researchers from Neuralink and the University of Michigan.
-- Proposed a consent-based, closed-loop dream-intervention system and a pilot study to test it; analysed UNESCO's neurotechnology ethics guidance.
+Full details at [krishvaid.me](https://krishvaid.me).
 
 <br>
 
@@ -89,6 +60,24 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
   <source media="(prefers-color-scheme: dark)" srcset="assets/sections/03-projects-dark.svg">
   <img src="assets/sections/03-projects-light.svg" width="100%" alt="03 projects">
 </picture>
+
+<a href="https://github.com/Krishiv-Vaid/tinytorch">
+<picture>
+  <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/projects/tinytorch-dark-compact.svg">
+  <source media="(max-width: 640px)" srcset="assets/projects/tinytorch-light-compact.svg">
+  <source media="(prefers-color-scheme: dark)" srcset="assets/projects/tinytorch-dark.svg">
+  <img src="assets/projects/tinytorch-light.svg" width="100%" alt="TinyTorch, in progress. A deep learning framework from scratch in C++20: strided tensors with broadcasting and zero-copy views, reverse-mode autodiff, NN layers and SGD/Adam, with gradients checked against finite differences. Next: an arena allocator and a cache-blocked AVX2/FMA matmul kernel benchmarked against OpenBLAS. C++20, Python, AVX2, CMake.">
+</picture>
+</a>
+
+<p>
+  <a href="https://github.com/Krishiv-Vaid/tinytorch"><img src="assets/badges/tt-lang.svg" alt="c++20"></a>
+  <a href="https://github.com/Krishiv-Vaid/tinytorch"><img src="assets/badges/tt-status.svg" alt="status: in progress"></a>
+  <a href="https://github.com/Krishiv-Vaid/tinytorch/blob/main/LICENSE"><img src="assets/badges/tt-license.svg" alt="license: MIT"></a>
+  <br><sub>&nbsp;<a href="https://github.com/Krishiv-Vaid/tinytorch">repository</a> · in progress, so no benchmarks yet · diagram: a transpose is a zero-copy view</sub>
+</p>
+
+<br>
 
 <a href="https://github.com/Krishiv-Vaid/double-pendulum">
 <picture>
@@ -161,6 +150,8 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
 
 <br><br>
 
+<a name="koi-pond"></a>
+
 <picture>
   <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="assets/sections/05-koi-dark-compact.svg">
   <source media="(max-width: 640px)" srcset="assets/sections/05-koi-light-compact.svg">
@@ -176,7 +167,7 @@ When I'm not coding, I'm usually playing chess, swimming, or stuck on a math pro
   <source media="(prefers-color-scheme: dark) and (max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-dark-compact.svg">
   <source media="(max-width: 640px)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light-compact.svg">
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-dark.svg">
-  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light.svg" width="100%" alt="GitHub statistics, regenerated daily from the GitHub GraphQL API: how many koi are swimming and how far the current one has grown, contributions by language, contributions over a rolling 365-day window, commits, pull requests, public repositories, stars, followers, language distribution, weekly activity and the past seven days.">
+  <img src="https://raw.githubusercontent.com/Krishiv-Vaid/Krishiv-Vaid/output/stats-light.svg" width="100%" alt="GitHub statistics, regenerated daily from the GitHub GraphQL API: how many koi are swimming and how far the current one has grown, contributions by language, contributions over a rolling 365-day window, commits, pull requests, public repositories, language distribution, weekly activity and the past seven days.">
 </picture>
 
 <details>
@@ -216,14 +207,8 @@ The idea of a creature that grows from your GitHub activity comes from [Git Tulk
   <img src="assets/beyond-light.svg" width="100%" alt="2562 Chess.com peak, top 0.01%, playing since age 3; 14 years of swimming, 10 competitive, sprints; 5.70 second speedcubing personal best; first hackathon win with Centsible at BHSS.">
 </picture>
 
-&nbsp;
+<br>
 
-- **Chess.** I've played since I was 3. Top 0.01% on Chess.com, with a 2562 peak rating.
-- **Swimming.** I've been swimming for 14 years and racing competitively for 10. Sprints are my favourite.
-- **Hackathons.** I've only recently started doing hackathons. My first win was [Centsible](https://github.com/Krishiv-Vaid/centsible), at the BHSS hackathon.
-- **Speedcubing.** 5.70 s personal best.
-- **Mathematics.** Beyond research, I work through open problems for fun: small cases first, then a proof I check by hand.
-- Also poker, Dota 2, table tennis, soccer, hiking and outdoor photography.
 
 <br>
 

@@ -38,7 +38,6 @@ def koi_block(meta: KoiMeta, cols: int) -> list[Spans]:
     rows.append(leader("swimming", f"{meta.koi} koi", cols, f"{meta.adults} adult"))
     rows.append(leader("growing", f"#{meta.current_index + 1} {meta.current_stage}", cols,
                        f"{meta.current_fed}/100 fed"))
-    rows.append(leader("length", f"{meta.current_length_px:.0f} px", cols))
     remaining = meta.next_koi_at - meta.contributions
     rows.append(leader("next koi", f"at {_fmt(meta.next_koi_at)}", cols, f"({remaining} to go)"))
     rows.append(leader("fed by", f"{_fmt(meta.contributions)} contributions", cols, "all-time"))
@@ -53,8 +52,6 @@ def github_block(s: Snapshot, cols: int) -> list[Spans]:
     rows.append(leader("pull requests", _fmt(s.pull_requests_total), cols,
                        f"all-time · {s.pull_requests_merged} merged"))
     rows.append(leader("public repos", _fmt(s.public_repos), cols, "owned, non-fork"))
-    rows.append(leader("stars", _fmt(s.stars), cols, "on owned repos"))
-    rows.append(leader("followers", _fmt(s.followers), cols))
     return rows
 
 
@@ -135,9 +132,7 @@ def render_stats(s: Snapshot, meta: KoiMeta, theme: Theme, width: float = 1000,
     # Koi colours: what each language has painted on the school.
     y = put_rows([rule("koi colours · contributions by language", total_cols)], pad, y)
     items = [(c["name"], str(c["count"]), c["hex"]) for c in meta.colours]
-    y = _swatch_row(body, all_text, items, pad, y, size, lh, width - pad)
-    y = put_rows([[("every 10 contributions paint one patch in the language they were written in", "f")]],
-                 pad, y) + lh * 0.4
+    y = _swatch_row(body, all_text, items, pad, y, size, lh, width - pad) + lh * 0.4
 
     # Language distribution: the same colours tint the lily pads.
     y = put_rows([rule("languages · lily pads", total_cols)], pad, y)
@@ -157,8 +152,6 @@ def render_stats(s: Snapshot, meta: KoiMeta, theme: Theme, width: float = 1000,
     items = [(lang.name, f"{lang.share * 100:.1f}%", pads.get(lang.name, pads.get("other", theme.dim)))
              for lang in s.languages[:6]]
     y = _swatch_row(body, all_text, items, pad, y, size, lh, width - pad)
-    scope = "bytes in owned public non-fork repos, markup excluded · each pad is a share of code"
-    y = put_rows([[(scope, "f")]], pad, y)
 
     # Activity: the year by week, then the past seven days by day, flush right.
     weeks = _weekly(s.daily)

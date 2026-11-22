@@ -20,7 +20,7 @@ SECTIONS: list[tuple[str | None, list[tuple[str, str]]]] = [
         ("user", "Krishiv Vaid"),
         ("institution", "University of Waterloo"),
         ("program", "Math, CS & Statistics"),
-        ("focus", "Systems · ML Infra · Mathematics"),
+        ("focus", "ML · AI4Science · Mathematics"),
         ("interests", "Distributed Systems, SciComp, AI"),
     ]),
     ("experience", [

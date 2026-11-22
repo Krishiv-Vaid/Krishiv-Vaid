@@ -133,13 +133,25 @@ def double_pendulum_path(t_max: float = 12.0, dt: float = 1e-3, th1: float = 150
 
 _PENDULUM_CACHE: dict = {}
 
+CAPTION = 12.5  # visual captions: readable when a card is scaled down on a phone
 
-def visual_pendulum(c: Canvas, x: float, y: float, w: float, h: float, theme: Theme) -> None:
+
+def _caption(c: Canvas, x: float, y: float, w: float, h: float, text: str,
+             size: float = CAPTION) -> None:
+    """Caption at the bottom of a visual, wrapped to its width (never overflows)."""
+    cols = int((w - 28) // (size * MONO_ADVANCE))
+    lines = textwrap.wrap(text, cols)
+    for i, line in enumerate(reversed(lines)):
+        c.text(x + 14, y + h - 14 - i * size * 1.45, [(line, "d")], size)
+
+
+def visual_pendulum(c: Canvas, x: float, y: float, w: float, h: float, theme: Theme,
+                    cap: float = CAPTION) -> None:
     if "data" not in _PENDULUM_CACHE:
         _PENDULUM_CACHE["data"] = double_pendulum_path()
     p1, p2, drift = _PENDULUM_CACHE["data"]
     scale = min(w, h - 40) / 4.5
-    cx, cy = x + w / 2, y + (h - 24) / 2
+    cx, cy = x + w / 2, y + (h - 44) / 2
 
     def P(pt) -> tuple[float, float]:
         return cx + pt[0] * scale, cy - pt[1] * scale
@@ -159,11 +171,47 @@ def visual_pendulum(c: Canvas, x: float, y: float, w: float, h: float, theme: Th
     c.raw(f'<circle cx="{pv[0]:.1f}" cy="{pv[1]:.1f}" r="2.4" fill="{theme.dim}"/>')
     for bx, by in (b1, b2):
         c.raw(f'<circle cx="{bx:.1f}" cy="{by:.1f}" r="4.6" fill="{theme.text}"/>')
-    c.text(x + 14, y + h - 14, [("RK4 · 1 ms · 12 s · 150°/150° · |ΔE/E| ≤ ", "d"),
-                                (f"{drift:.1e}", "m")], 10.5)
+    _caption(c, x, y, w, h, f"RK4 · 1 ms · 12 s · 150°/150° · |ΔE/E| ≤ {drift:.1e}", cap)
 
 
-def visual_receipt(c: Canvas, x: float, y: float, w: float, h: float, theme: Theme) -> None:
+def visual_tensor(c: Canvas, x: float, y: float, w: float, h: float, theme: Theme,
+                  cap: float = CAPTION) -> None:
+    """Strided storage: a transpose is new strides over the same buffer (zero-copy view)."""
+    hi = 6  # element highlighted across storage and both views
+    cell = 24
+    size = 11.5
+    sx = x + (w - 12 * cell) / 2
+    sy = y + 44
+    c.text(sx, sy - 12, [("storage", "m"), ("  float32[12], contiguous", "d")], size)
+
+    def box(bx, by, val, on):
+        stroke = theme.accent if on else theme.rule
+        fill = theme.accent if on else "none"
+        op = ' fill-opacity="0.16"' if on else ""
+        c.raw(f'<rect x="{bx:.1f}" y="{by:.1f}" width="{cell - 3}" height="{cell - 3}" rx="3" '
+              f'fill="{fill}"{op} stroke="{stroke}"/>')
+        c.text(bx + (cell - 3) / 2, by + cell / 2 + 2.8, [(str(val), "ab" if on else "x")], size, "middle")
+
+    for i in range(12):
+        box(sx + i * cell, sy, i, i == hi)
+    gy = sy + 76
+    ax = x + w * 0.10
+    c.text(ax, gy - 14, [("a", "b"), ("  (3,4) stride (4,1)", "d")], size)
+    for r in range(3):
+        for q in range(4):
+            v = r * 4 + q
+            box(ax + q * cell, gy + r * cell, v, v == hi)
+    bx = x + w * 0.58
+    c.text(bx, gy - 14, [("a.T", "b"), ("  (4,3) stride (1,4)", "d")], size)
+    for r in range(4):
+        for q in range(3):
+            v = q * 4 + r
+            box(bx + q * cell, gy + r * cell, v, v == hi)
+    _caption(c, x, y, w, h, "transpose = new strides, same buffer: zero copies", cap)
+
+
+def visual_receipt(c: Canvas, x: float, y: float, w: float, h: float, theme: Theme,
+                   cap: float = CAPTION) -> None:
     size = 11.2
     lh = size * 1.85
     cols = 33
@@ -182,11 +230,11 @@ def visual_receipt(c: Canvas, x: float, y: float, w: float, h: float, theme: The
               [("─" * cols, "f")], row("take-home", "$831.23", "b")]
     total_w = cols * size * MONO_ADVANCE
     x0 = x + (w - total_w) / 2
-    y0 = y + (h - 24 - len(lines) * lh) / 2 + lh * 0.8
+    y0 = y + (h - 44 - len(lines) * lh) / 2 + lh * 0.8
     for i, spans in enumerate(lines):
         if spans:
             c.text(x0, y0 + i * lh, spans, size)
-    c.text(x + 14, y + h - 14, [("example from the app: age 16, student minimum wage", "d")], 10.5)
+    _caption(c, x, y, w, h, "example from the app: age 16, student minimum wage", cap)
 
 
 # --------------------------------------------------------------------------
@@ -213,6 +261,19 @@ class Project:
 
 
 PROJECTS = [
+    Project(
+        slug="tinytorch",
+        name="TinyTorch",
+        tag="in progress",
+        description=("A deep learning framework from scratch in C++20: strided tensors with "
+                     "broadcasting and zero-copy views, reverse-mode autodiff, NN layers and "
+                     "SGD/Adam, with gradients checked against finite differences. Next: an arena "
+                     "allocator and a cache-blocked AVX2/FMA matmul kernel benchmarked against "
+                     "OpenBLAS."),
+        # no stat tiles: it's in progress and nothing has been benchmarked yet
+        tech="c++20 · python · avx2 · cmake",
+        visual="tensor",
+    ),
     Project(
         slug="double-pendulum",
         name="Double Pendulum Simulator",
@@ -241,10 +302,10 @@ PROJECTS = [
     ),
 ]
 
-VISUALS = {"pendulum": visual_pendulum, "receipt": visual_receipt}
+VISUALS = {"tensor": visual_tensor, "pendulum": visual_pendulum, "receipt": visual_receipt}
 
 
-def _tag(c: Canvas, x_right: float, y: float, text: str, theme: Theme, size: float = 11) -> None:
+def _tag(c: Canvas, x_right: float, y: float, text: str, theme: Theme, size: float = 12) -> None:
     w = (len(text) + 2) * size * MONO_ADVANCE
     c.raw(f'<rect x="{x_right - w:.1f}" y="{y - size - 3:.1f}" width="{w:.1f}" height="{size + 9:.1f}" '
           f'rx="{(size + 9) / 2:.1f}" fill="none" stroke="{theme.rule}"/>')
@@ -252,7 +313,7 @@ def _tag(c: Canvas, x_right: float, y: float, text: str, theme: Theme, size: flo
 
 
 def _project_text(c: Canvas, p: Project, x: float, y: float, w: float, theme: Theme,
-                  body: float, title: float, small: float = 10.8, metric_cols: int = 4) -> float:
+                  body: float, title: float, small: float = 12.6, metric_cols: int = 4) -> float:
     c.text(x, y, [(p.name, "b")], title)
     _tag(c, x + w, y - 3, p.tag, theme)
     y += title * 1.2 + 6
@@ -316,10 +377,10 @@ def project_card_compact(p: Project, theme: Theme, width: float = 560) -> str:
     pad = 24
     vis_h = 300
     c.raw("")
-    VISUALS[p.visual](c, (width - 380) / 2, 0, 380, vis_h, theme)
+    VISUALS[p.visual](c, (width - 380) / 2, 0, 380, vis_h, theme, cap=15.0)
     c.raw(f'<line x1="1" y1="{vis_h}" x2="{width - 1}" y2="{vis_h}" stroke="{theme.edge}"/>')
     end = _project_text(c, p, pad, vis_h + pad + 18, width - 2 * pad, theme, body=14.5, title=20,
-                        small=13.0, metric_cols=2)
+                        small=15.0, metric_cols=2)
     height = end + pad
     c.parts[0] = card_rect(width, height, theme)
     return c.svg(width, height, theme, f"{p.name}: {p.description}")
@@ -386,18 +447,18 @@ BADGE_VALUE = "#6f8fae"
 BADGE_EDGE = "#8b949e"
 
 
-def badge(label: str, value: str, size: float = 11.0) -> str:
+def badge(label: str, value: str, size: float = 12.0) -> str:
     c = Canvas()
     cw = size * MONO_ADVANCE
     pad = 7
     lw = len(label) * cw + 2 * pad
     vw = len(value) * cw + 2 * pad
-    w, h = lw + vw, 20
+    w, h = lw + vw, 22
     c.raw(f'<rect x="0.5" y="0.5" width="{w - 1:.1f}" height="{h - 1}" rx="5" fill="none" '
           f'stroke="{BADGE_EDGE}" stroke-opacity="0.55"/>')
     c.raw(f'<line x1="{lw:.1f}" y1="1" x2="{lw:.1f}" y2="{h - 1}" stroke="{BADGE_EDGE}" stroke-opacity="0.35"/>')
-    c.text(pad, 14, [(label, "bl")], size)
-    c.text(lw + pad, 14, [(value, "bv")], size)
+    c.text(pad, 15.5, [(label, "bl")], size)
+    c.text(lw + pad, 15.5, [(value, "bv")], size)
     extra = f".bl{{fill:{BADGE_LABEL}}}.bv{{fill:{BADGE_VALUE};font-weight:600}}"
     from .theme import DARK as _D
     return c.svg(w, h, _D, f"{label}: {value}", extra)
@@ -405,6 +466,11 @@ def badge(label: str, value: str, size: float = 11.0) -> str:
 
 # (file slug, label, value, link)
 BADGES: dict[str, list[tuple[str, str, str, str]]] = {
+    "tinytorch": [
+        ("tt-lang", "c++", "20", "https://github.com/Krishiv-Vaid/tinytorch"),
+        ("tt-status", "status", "in progress", "https://github.com/Krishiv-Vaid/tinytorch"),
+        ("tt-license", "license", "MIT", "https://github.com/Krishiv-Vaid/tinytorch/blob/main/LICENSE"),
+    ],
     "double-pendulum": [
         ("dp-python", "python", ">=3.10", "https://github.com/Krishiv-Vaid/double-pendulum/blob/main/pyproject.toml"),
         ("dp-tests", "tests", "150 pytest", "https://github.com/Krishiv-Vaid/double-pendulum/tree/main/tests"),
@@ -438,9 +504,9 @@ def beyond_tiles(theme: Theme, width: float = 1000, compact: bool = False) -> st
     ncol = 2 if compact else 4
     gap = 14
     tw = (width - gap * (ncol - 1)) / ncol
-    th = 104 if not compact else 128
+    th = 118 if not compact else 140
     big = 26 if not compact else 32
-    small = 11.5 if not compact else 15
+    small = 13.5 if not compact else 16
     rows = (len(TILES) + ncol - 1) // ncol
     for i, (value, label, note) in enumerate(TILES):
         x = (i % ncol) * (tw + gap)
