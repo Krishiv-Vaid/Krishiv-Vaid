@@ -4,7 +4,7 @@
     python scripts/generate_portrait.py                 # assets/portrait-{dark,light}.svg
     python scripts/generate_portrait.py --out out       # daily: refreshes the uptime line
     python scripts/generate_portrait.py --variants      # + docs/img/portrait-variants.png
-    python scripts/generate_portrait.py --from-photo me.jpg --crop 360,85,940,780
+    python scripts/generate_portrait.py --from-photo me.jpg --crop 185,95,995,1065
                                                         # rebuild source/portrait-cutout.png
 
 The committed cutout (source/portrait-cutout.png) is a greyscale + alpha crop,
@@ -43,14 +43,14 @@ FINAL = AsciiParams(  # light mode
     rim_light=True,
     mode="shape",
     shape_weight=1.0,
-    level_box=(0.31, 0.31, 0.74, 0.68),  # face: forehead -> chin, cheek to cheek
+    level_box=(0.30, 0.30, 0.72, 0.66),  # face: forehead -> chin, cheek to cheek
     lo_pct=3,
     hi_pct=98.5,
-    gamma=1.5,
-    shadow_detail=0.3,
-    smooth=0.8,  # skin reads as shading, not speckle
+    gamma=1.2,
+    shadow_detail=0.5,  # hair keeps its strands and volume
+    smooth=1.0,  # skin reads as shading, not speckle
     edge_weight=0.2,
-    local_contrast=0.8,
+    local_contrast=0.9,
     local_radius=0.03,
     fade_start=0.58,
     fade_end=0.90,
@@ -63,13 +63,13 @@ FINAL_DARK = with_overrides(
     level_box=None,
     lo_pct=2,
     hi_pct=99.5,
-    gamma=0.95,
-    shadow_detail=0.0,
-    smooth=0.6,
+    gamma=0.8,
+    shadow_detail=0.45,  # textured, voluminous hair (as in the bird photo)
+    smooth=0.8,
     edge_weight=0.15,
-    local_contrast=1.5,
+    local_contrast=1.6,
     local_radius=0.025,
-    floor=0.17,  # dark hair still drawn, faintly, so the silhouette survives
+    floor=0.25,  # dark hair still drawn so the silhouette and volume survive
 )
 
 VARIANTS: dict[str, dict] = {
@@ -133,7 +133,7 @@ def variants_sheet(out: Path) -> None:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--from-photo", type=Path)
-    ap.add_argument("--crop", default="360,85,940,780")  # head and shoulders in the bird photo
+    ap.add_argument("--crop", default="185,95,995,1065")
     ap.add_argument("--variants", action="store_true")
     ap.add_argument("--out", type=Path, default=ROOT / "assets")
     ap.add_argument("--today", help="date for the uptime line (default: today in Toronto)")
