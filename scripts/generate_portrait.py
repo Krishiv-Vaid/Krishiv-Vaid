@@ -70,6 +70,7 @@ FINAL_DARK = with_overrides(
     local_contrast=1.5,
     local_radius=0.025,
     floor=0.17,  # dark hair still drawn, faintly, so the silhouette survives
+    dotless_below=0.4,  # no stray dot glyphs in the hair
 )
 
 VARIANTS: dict[str, dict] = {

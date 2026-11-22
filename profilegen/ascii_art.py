@@ -56,6 +56,9 @@ class AsciiParams:
     level_box: tuple[float, float, float, float] | None = None
     shadow_detail: float = 0.0  # 0..1 blend of whole-subject levels
     smooth: float = 0.0  # pre-blur (analysis px): skin reads as shading, not speckle
+    # Cells fainter than this never use dot-like glyphs (. , : ; ' `): on a dark
+    # background they read as stray white dots in the hair. 0 disables.
+    dotless_below: float = 0.0
     edge_weight: float = 0.35
     floor: float = 0.0  # minimum ink inside the subject (keeps silhouette)
     fade_start: float = 0.70  # fraction of height where the torso fades
@@ -329,6 +332,10 @@ def convert(lum: np.ndarray, alpha: np.ndarray, p: AsciiParams,
         sel[mean_ink < 0.03] = atlas.chars.index(" ")
         chars = ["".join(atlas.chars[i] for i in row) for row in sel]
 
+    if p.dotless_below > 0:
+        dots = set(".,:;'`")
+        chars = ["".join("-" if (ch in dots and mean_ink[r, c] < p.dotless_below) else ch
+                         for c, ch in enumerate(row)) for r, row in enumerate(chars)]
     q = np.clip(mean_ink / max(np.percentile(mean_ink[mean_ink > 0.02], 97)
                                if (mean_ink > 0.02).any() else 1.0, 1e-6), 0, 0.9999)
     tones = (q * p.tone_levels).astype(int)
