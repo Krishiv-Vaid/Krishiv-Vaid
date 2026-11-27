@@ -1,0 +1,82 @@
+{
+  "contributions": 165,
+  "koi": 2,
+  "adults": 1,
+  "current_index": 1,
+  "current_fed": 65,
+  "current_stage": "Nisai",
+  "current_length_px": 39.1,
+  "next_koi_at": 200,
+  "colours": [
+    {
+      "name": "C++",
+      "hex": "#eb336a",
+      "count": 57
+    },
+    {
+      "name": "Python",
+      "hex": "#2e73ac",
+      "count": 44
+    },
+    {
+      "name": "HTML",
+      "hex": "#e34c26",
+      "count": 33
+    },
+    {
+      "name": "private / no code",
+      "hex": "#6b7078",
+      "count": 11
+    },
+    {
+      "name": "TypeScript",
+      "hex": "#3178c6",
+      "count": 10
+    },
+    {
+      "name": "JavaScript",
+      "hex": "#ebd633",
+      "count": 6
+    },
+    {
+      "name": "TeX",
+      "hex": "#68a527",
+      "count": 4
+    }
+  ],
+  "leaves": [
+    {
+      "name": "Python",
+      "share": 0.3355,
+      "hex": "#518d9c",
+      "source": "#3572A5"
+    },
+    {
+      "name": "TypeScript",
+      "share": 0.2968,
+      "hex": "#578896",
+      "source": "#3178c6"
+    },
+    {
+      "name": "JavaScript",
+      "share": 0.2582,
+      "hex": "#a5b06a",
+      "source": "#f1e05a"
+    },
+    {
+      "name": "C++",
+      "share": 0.0982,
+      "hex": "#a5807a",
+      "source": "#f34b7d"
+    },
+    {
+      "name": "other",
+      "share": 0.0113,
+      "hex": "#8a9691",
+      "source": "#8b949e"
+    }
+  ],
+  "day": "2026-11-27",
+  "stale": false,
+  "inputs_hash": "da04e7bd2d3cb051"
+}
